@@ -1,15 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Destinations from './components/Destinations';
+import Publication from './components/Publication';
+
 
 function App() {
+
   return (
-    <div className="bg-blue-500 text-white text-3xl font-bold p-6">
-      🎉 Tailwind CSS fonctionne !
+    <div className='min-h-screen'>
+      <Navbar />
     </div>
   );
 }
 
 export default App;
-

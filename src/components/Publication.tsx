@@ -8,7 +8,7 @@ import schoolImage3 from '../assets/bg3.jpg';
 const images = [
   { src: schoolImage1, title: "Bienvenue à l'École", description: "Notre école offre un environnement d'apprentissage stimulant, avec des enseignants dévoués et des installations modernes." },
   { src: schoolImage2, title: "Nos Valeurs", description: "Nous croyons en l'éducation inclusive et en la diversité pour enrichir l'expérience d'apprentissage." },
-  { src: schoolImage3, title: "Activités Extrascolaires", description: "Nous proposons une variété d'activités pour favoriser le développement personnel et social de nos élèves." },
+  { src: schoolImage3, title: "Activités", description: "Nous proposons une variété d'activités pour favoriser le développement personnel et social de nos élèves." },
 ];
 
 const Publication: React.FC = () => {

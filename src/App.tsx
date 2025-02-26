@@ -1,8 +1,6 @@
 import React from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Destinations from './components/Destinations';
-import Publication from './components/Publication';
+import ContactSection from './components/ContactSection';
 
 
 function App() {

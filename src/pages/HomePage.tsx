@@ -1,26 +1,37 @@
-import { useState } from "react";
-import { directionItem, financeItem } from "../dataMenu/sidebarItem";
-import MainContent from "../components/main_app/MainSection";
 import Header from "../components/main_app/Header";
 import Sidebar from "../components/main_app/Sidebar";
+import { useState } from "react";
 
-const Home = () => {
-  const [activeMenu, setActiveMenu] = useState(directionItem[0]);
+interface HomeProps {
+  children?: React.ReactNode;
+}
+
+const Home = ({ children }: HomeProps) => {
+  const [isOpen, setIsOpen] = useState(true); // true = ouverte par défaut
+  const role = localStorage.getItem("role")
   return (
-    <div>
-      <div className="">
+    <div className="h-screen flex flex-col">
+      {/* Header */}
+      <div className="flex-shrink-0">
         <Header />
       </div>
 
-      <div className="flex">
-        <div className="">
-          <Sidebar setActiveMenu={setActiveMenu} />
-        </div>
-        <div className="ml-64 p-4 w-full h-screen overflow-y-auto">
-          <MainContent activeMenu={activeMenu} />
-        </div>
+      {/* Contenu principal */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar contrôlée */}
+        {role !== "parent" && (<Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />)}
+
+        {/* Main avec padding dynamique */}
+        <main
+          className={`flex-1 overflow-y-auto transition-all duration-500 p-4 bg-gray-50 ${
+            isOpen ? "ml-60" : "ml-10"
+          }`}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );
 };
+
 export default Home;

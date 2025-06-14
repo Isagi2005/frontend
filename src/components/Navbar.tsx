@@ -9,7 +9,8 @@ interface Props {
 }
 
 const Navbar = ({ children }: Props) => {
-  const { isOpen, toggleMenu, activeMenuId, toggleSubMenu } = useMenu();
+  const { isOpen, toggleMenu, activeMenuId, toggleSubMenu, closeSubMenu } =
+    useMenu();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -27,16 +28,20 @@ const Navbar = ({ children }: Props) => {
         className={`fixed w-full top-0 z-20 transition-all duration-300 shadow-md backdrop-blur-lg 
           ${
             isScrolled
-              ? "bg-emerald-100 bg-opacity-90 text-gray-900"
-              : "bg-[#002147] text-white"
+              ? "bg-gradient-to-r from-blue-400 to-green-400 bg-opacity-90 text-gray-900"
+              : "bg-gradient-to-r from-emerald-300 to-blue-400 text-blue-950"
           }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <img src={monImage} alt="RAITRA KIDZ" className="h-12 w-auto" />
+          <div className="flex items-center space-x-2">
+            <img
+              src={monImage}
+              alt="RAITRA KIDZ"
+              className="h-12 w-auto items-start"
+            />
             <span className="text-lg font-bold">Raitra Kidz</span>
-          </Link>
+          </div>
 
           {/* Menu Desktop */}
           <nav className="hidden md:flex space-x-6">
@@ -52,7 +57,10 @@ const Navbar = ({ children }: Props) => {
                     </button>
                     {/* Sous-menu */}
                     {activeMenuId === item.id && (
-                      <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-lg w-48 py-2">
+                      <div
+                        onMouseLeave={closeSubMenu}
+                        className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-lg w-48 py-2"
+                      >
                         {item.subMenu.map((subItem) => (
                           <Link
                             key={subItem.id}

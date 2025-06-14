@@ -1,15 +1,18 @@
 import api from "./api";
-import { User } from "./userApi";
 
 // Interface EventType
 export interface EventType {
-  id?: number;
+  idevenement: number;
   titre: string;
   description: string;
   image: File | string | null;
   datedebut: string;
   datefin: string;
-  publierPar?: User;
+  dateD: string;
+  dateF: string;
+  publiePar?: string;
+  typeEvent: "scolaire" | "formation" | "annonce" | " autres";
+  lieu: string;
 }
 
 // Fonction utilitaire pour préparer le FormData
@@ -18,10 +21,12 @@ const prepareFormData = (event: EventType): FormData => {
   formData.append("titre", event.titre);
   formData.append("description", event.description);
   if (event.image && event.image instanceof File) {
-    formData.append("image", event.image); // Ajouter l'image si elle existe
+    formData.append("image", event.image);
   }
   formData.append("datedebut", event.datedebut);
   formData.append("datefin", event.datefin);
+  formData.append("typeEvent", event.typeEvent);
+  formData.append("lieu", event.lieu);
   return formData;
 };
 
@@ -34,29 +39,39 @@ const eventApi = {
     const { data } = await api.get("dir/events/list");
     return data;
   },
+  getOneEvent: async (id: number): Promise<EventType> => {
+    const { data } = await api.get(`/events/list/${id}/`);
+    return data;
+  },
 
   addEvents: async (event: EventType): Promise<EventType> => {
-    const formData = prepareFormData(event); // Utilisation de la fonction utilitaire
+    const formData = prepareFormData(event);
+    console.log(formData);
+    console.log(event);
     const { data } = await api.post("dir/events/", formData, {
       headers: {
-        "Content-Type": "multipart/form-data", // Important pour indiquer qu'on envoie des fichiers
+        "Content-Type": "multipart/form-data",
       },
     });
     return data;
   },
 
   updateEvents: async (event: EventType): Promise<EventType> => {
-    const formData = prepareFormData(event); // Utilisation de la fonction utilitaire
-    const { data } = await api.put(`dir/events/update/${event.id}/`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // Important pour indiquer qu'on envoie des fichiers
-      },
-    });
+    const formData = prepareFormData(event);
+    const { data } = await api.patch(
+      `api/events/${event.idevenement}/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // Important pour indiquer qu'on envoie des fichiers
+        },
+      }
+    );
     return data;
   },
 
   deleteEvents: async (id: number): Promise<void> => {
-    await api.delete(`dir/events/delete/${id}/`);
+    await api.delete(`api/events/${id}/`);
   },
 };
 

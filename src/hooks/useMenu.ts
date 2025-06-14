@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-// Hook personnalisé pour gérer l'état du menu et du sous-menu
 const useMenu = () => {
-  const [isOpen, setIsOpen] = useState(false); // Ajouter l'état pour le menu
+  const [isOpen, setIsOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
   const [selectedSubItem, setSelectedSubItem] = useState<{
     id: number;
@@ -10,11 +9,15 @@ const useMenu = () => {
   } | null>(null);
 
   const toggleMenu = () => {
-    setIsOpen((prev) => !prev); // Toggle pour ouvrir/fermer le menu
+    setIsOpen((prev) => !prev);
   };
 
   const toggleSubMenu = (id: number) => {
     setActiveMenuId(activeMenuId === id ? null : id);
+  };
+
+  const closeSubMenu = () => {
+    setActiveMenuId(null);
   };
 
   const selectSubItem = (id: number, name: string) => {
@@ -28,6 +31,7 @@ const useMenu = () => {
     activeMenuId,
     selectedSubItem,
     toggleSubMenu,
+    closeSubMenu, // ← on exporte ici
     selectSubItem,
   };
 };

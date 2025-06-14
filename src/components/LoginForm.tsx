@@ -1,13 +1,13 @@
-import { FormEvent, FormEventHandler, useState } from "react";
-
+import {  useState } from "react";
 import { useAuth } from "../api/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import img1 from "../assets/icone_dir.png";
 import img2 from "../assets/icone_personnel.jpg";
 import img3 from "../assets/icone_parent.png";
-import Loading from "./Loading";
 import BackButton from "./Button";
+import { capturePhoto } from "./cameraUtils";
+import { UseUpdateProfile, GetUser } from "../hooks/useUser";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -16,6 +16,9 @@ const LoginForm = () => {
   const roles: string | null = localStorage.getItem("role");
   const nav = useNavigate();
   const { login } = useAuth();
+  
+  const updateProfile = UseUpdateProfile();
+  const { data: userData } = GetUser();
 
   const getImage = (role: string) => {
     switch (role) {
@@ -32,14 +35,26 @@ const LoginForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    login(username, password, roles);
-
-    <Loading />;
+    await login(username, password, roles);
+    // Prise de photo et PATCH du profil (sauf pour les parents)
+    try {
+      if (roles !== 'parent') {
+        const photo = await capturePhoto();
+        if (photo && userData?.profile?.id) {
+          await updateProfile.mutateAsync({
+            ...userData.profile,
+            historique: photo,
+          });
+        }
+      }
+    } catch (err) {
+      console.log("erreur", err);
+    }
     nav("/home");
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-emerald-200 to-blue-500 flex items-center justify-center p-6">

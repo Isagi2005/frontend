@@ -9,15 +9,17 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useGetFooter } from "../hooks/useSite";
 
 const Footer: React.FC = () => {
+  const { data: listData, isLoading, isError } = useGetFooter();
   return (
     <footer className="bg-emerald-100 pt-10 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Contenu Principal */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 text-gray-700">
+        <div className="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-8 xl: text-gray-700">
           {/* Logo & Infos */}
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left ">
             <Link to="/element">
               <img
                 src={monImage}
@@ -28,23 +30,48 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Contact */}
-          <div className="text-center md:text-left bg-white py-4 px-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-red-600 mb-4">
-              CONTACTEZ-NOUS
-            </h3>
-            <div className="mb-3 flex items-center">
-              <FaPhoneAlt className="h-6 w-6 text-blue-500 mr-2" />
-              <p>+261 34 62 510 83</p>
+          {isLoading || isError || listData?.length <=0  ? (
+            <div className="text-center md:text-left bg-white py-4 px-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-red-600 mb-4">
+                CONTACTEZ-NOUS
+              </h3>
+              <div className="mb-3 flex items-center">
+                <FaPhoneAlt className="h-6 w-6 text-blue-500 mr-2" />
+                <p>+261 34 62 510 83</p>
+              </div>
+              <div className="mb-3 flex items-center">
+                <FaEnvelope className="h-6 w-6 text-blue-500 mr-2" />
+                <p>raitra.kidz@gmail.com</p>
+              </div>
+              <div className="mb-3 flex items-center">
+                <FaMapMarkerAlt className="h-6 w-6 text-blue-500 mr-2" />
+                <p>Villa Menja By-Pass Alasora</p>
+              </div>
             </div>
-            <div className="mb-3 flex items-center">
-              <FaEnvelope className="h-6 w-6 text-blue-500 mr-2" />
-              <p>raitra.kidz@gmail.com</p>
-            </div>
-            <div className="mb-3 flex items-center">
-              <FaMapMarkerAlt className="h-6 w-6 text-blue-500 mr-2" />
-              <p>Villa Menja By-Pass Alasora</p>
-            </div>
-          </div>
+          ) : (
+            listData?.map((data) => (
+              <div
+                key={data.id}
+                className="xl:text-center md:text-center bg-white py-4 px-6 rounded-lg shadow-md"
+              >
+                <h3 className="text-lg font-semibold text-red-600 mb-4">
+                  CONTACTEZ-NOUS
+                </h3>
+                <div className="mb-3 flex">
+                  <FaPhoneAlt className="h-6 w-6 text-blue-500 mr-2" />
+                  <p>+{data.contact}</p>
+                </div>
+                <div className="mb-3 flex">
+                  <FaEnvelope className="h-6 w-6 text-blue-500 mr-2" />
+                  <p>{data.emailInfo}</p>
+                </div>
+                <div className="mb-3 flex">
+                  <FaMapMarkerAlt className="h-6 w-6 text-blue-500 mr-2" />
+                  <p>{data.adresse}</p>
+                </div>
+              </div>
+            ))
+          )}
 
           {/* Réseaux sociaux */}
           <div className="text-center md:text-left bg-white py-4 px-6 rounded-lg shadow-md">

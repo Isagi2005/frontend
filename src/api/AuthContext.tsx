@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { createContext } from "react";
 import { Is_authenticated, useLogin, UseLogout } from "../hooks/useLogin";
 import { refreshToken } from "../api/Refresh";
-
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -17,18 +16,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const [hasLoggedOut, setHasLoggedOut] = useState(false);
   const loginMutation = useLogin();
 
+  // Supprime le hasLoggedOut et utilise plutôt ceci
+  const skipInitialAuthCheck = useRef(false);
+
   const getAuthenticated = async () => {
+    if (skipInitialAuthCheck.current) return;
+
     try {
-      if (hasLoggedOut == false) {
-        const success: boolean = await Is_authenticated();
-        setIsAuthenticated(success);
-      } else {
-        console.log(hasLoggedOut);
-        setIsAuthenticated(false);
-      }
+      const success: boolean = await Is_authenticated();
+      setIsAuthenticated(success);
     } catch {
       setIsAuthenticated(false);
     } finally {
@@ -37,40 +35,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const login = (username: string, password: string, role: string) => {
-    loginMutation.mutate(
-      { username, password, role },
-      {
-        onSuccess: () => {
-          setIsAuthenticated(true);
-          return true;
-        },
-        onError: () => {
-          setIsAuthenticated(false);
-          return false;
-        },
-      }
-    );
+    setLoading(true);
+    skipInitialAuthCheck.current = true; // On skip la vérification initiale après login
+
+    return new Promise<boolean>((resolve) => {
+      loginMutation.mutate(
+        { username, password, role },
+        {
+          onSuccess: () => {
+            setIsAuthenticated(true);
+            setLoading(false);
+            resolve(true);
+          },
+          onError: () => {
+            setIsAuthenticated(false);
+            setLoading(false);
+            skipInitialAuthCheck.current = false; // Réactive la vérification pour les prochains essais
+            resolve(false);
+          },
+        }
+      );
+    });
   };
+
   const logout = async () => {
     const success = await UseLogout();
-
     if (success) {
       setIsAuthenticated(false);
-      setHasLoggedOut(true);
+      skipInitialAuthCheck.current = false; // Réactive la vérification après logout
     }
   };
 
   useEffect(() => {
-    if (!hasLoggedOut) {
-      getAuthenticated();
-    }
+    getAuthenticated();
 
     const interval = setInterval(async () => {
-      await refreshToken();
+      if (isAuthenticated) {
+        await refreshToken();
+      }
     }, 25 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [hasLoggedOut]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
@@ -78,5 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     </AuthContext.Provider>
   );
 };
-
 export const useAuth = () => useContext(AuthContext);
+
+export default AuthContext;
+

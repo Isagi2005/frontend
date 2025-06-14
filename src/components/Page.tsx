@@ -1,36 +1,43 @@
 import { typeData } from "../dataMenu/textData";
 
-interface pageProps {
+interface PageProps {
   dataText: typeData[];
 }
 
-const Page = ({ dataText }: pageProps) => {
+const Page = ({ dataText }: PageProps) => {
   return (
-    <div className="p-6 mt-22">
-      {dataText.map((data) => (
+    <div className="mt-20 container mx-auto px-6 py-12 space-y-16">
+      {dataText.map((data, index) => (
         <div
           key={data.id}
-          className="flex mt-24 bg-yellow-50 shadow-xl rounded-lg px-4 py-4"
+          className={`flex flex-col lg:flex-row items-center gap-8 shadow-lg rounded-lg overflow-hidden p-6 bg-white ${
+            index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
+          }`}
         >
-          <img
-            src={data.image}
-            alt="Description de la première image"
-            className="w-1/2 h-auto rounded-lg shadow-lg"
-            style={{ maxHeight: "300px", objectFit: "cover" }}
-          />
-          <div />
-          <div className="ml-4 flex flex-col justify-center">
-            <h1 className="text-4xl font-bold text-orange-600 mb-4 text-center">
+          {/* Image */}
+          <div className="w-full lg:w-1/2">
+            <img
+              src={data.image}
+              alt="Illustration"
+              className="w-full h-80 object-cover rounded-lg shadow-md"
+            />
+          </div>
+
+          {/* Texte */}
+          <div className="w-full lg:w-1/2 ">
+            <h1 className="text-3xl font-bold text-orange-600 mb-4">
               {data.titre}
             </h1>
-            <div className="px-4 py-4">
-              <p className="text-lg text-blue-950">{data.sous_titres}</p>
-              <ul className="list-disc list-inside ml-5">
-                {data.liste.map((list) => (
-                  <li>{list}</li>
-                ))}
-              </ul>
-            </div>
+            <p className="text-lg text-gray-700 italic mb-4">
+              {data.sous_titres}
+            </p>
+            <ul className=" list-inside text-gray-800 space-y-2">
+              {data.liste.map((list, i) => (
+                <li key={i} className="pl-10">
+                  {list}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       ))}

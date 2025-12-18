@@ -23,7 +23,23 @@ const texte: string =
 const AccueilPage = () => {
   const { data: listData, isLoading: loadData, isError } = useGetAccueil()
   const navigate = useNavigate()
+  const hasBackendImages =
+  !!listData &&
+  listData.length > 0 &&
+  listData.some((item) => {
+    const img1 = item.image1
+    const img2 = item.image2
+    const img3 = item.image3
 
+    const hasImg1 =
+      typeof img1 === "string" ? img1.trim() !== "" : img1 instanceof File
+    const hasImg2 =
+      typeof img2 === "string" ? img2.trim() !== "" : img2 instanceof File
+    const hasImg3 =
+      typeof img3 === "string" ? img3.trim() !== "" : img3 instanceof File
+
+    return hasImg1 || hasImg2 || hasImg3
+  })
   // États pour l'affichage des données fictives
   const [currentImage, setCurrentImage] = useState(0)
   const [fade, setFade] = useState(true)
@@ -42,10 +58,16 @@ const AccueilPage = () => {
       return () => clearInterval(interval)
     }
   }, [loadData, isError])
+  console.log({
+  loadData,
+  isError,
+  hasBackendImages,
+  listData,
+})
 
   return (
     <>
-      {loadData || isError || listData?.length <= 0 ? (
+      {loadData || isError || !hasBackendImages ? (
         // Affichage direct des données fictives avec le même style que le composant Accueil
         <div
           className={`mt-20 relative w-full h-screen flex items-center justify-center bg-cover bg-center transition-opacity duration-1000 ${

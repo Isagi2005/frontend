@@ -7,30 +7,37 @@ interface PageProps {
 }
 
 const Accueil = ({ data }: PageProps) => {
-  const imagesbackend = [data.image1, data.image2, data.image3]
+  const imagesbackend = [data.image1, data.image2, data.image3].filter(
+  (img): img is string => typeof img === "string" && img.trim() !== ""
+)
   const [currentImage, setCurrentImage] = useState(0)
   const [fade, setFade] = useState(true)
   const [showFullText, setShowFullText] = useState(false)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFade(false)
-      setTimeout(() => {
-        setCurrentImage((prevIndex) => (prevIndex + 1) % imagesbackend.length)
-        setFade(true)
-      }, 500)
-    }, 10000)
-    return () => clearInterval(interval)
-  }, [imagesbackend.length])
+ useEffect(() => {
+  if (imagesbackend.length === 0) return
+
+  const interval = setInterval(() => {
+    setFade(false)
+    setTimeout(() => {
+      setCurrentImage((prevIndex) => (prevIndex + 1) % imagesbackend.length)
+      setFade(true)
+    }, 500)
+  }, 10000)
+
+  return () => clearInterval(interval)
+}, [imagesbackend.length])
 
   return (
     <div
       className={`mt-20 relative w-full h-screen flex items-center justify-center bg-cover bg-center transition-opacity duration-1000 ${
         fade ? "opacity-100" : "opacity-0"
         }`}
-      style={{ backgroundImage: `url(${imagesbackend[currentImage]})` }}
+      style={{backgroundImage:
+    imagesbackend.length > 0 ? `url(${imagesbackend[currentImage]})` : "none",
+}}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+      <div className="absolute inset-0  bg-black/60"></div>
       <div className="relative z-10 text-center text-white px-6 max-w-3xl">
         {/* Titre toujours visible */}
         <h1 className="text-4xl md:text-6xl text-emerald-100 font-mono font-bold mb-6">{data.titre}</h1>

@@ -1,5 +1,5 @@
 import React from "react";
-import monImage from "../assets/logo1.png";
+import monImage from "../assets/Logo1.png";
 import {
   FaFacebook,
   FaInstagram,
@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
               <img
                 src={monImage}
                 alt="RAITRA KIDZ"
-                className="h-auto w-13 mx-auto md:mx-0"
+                className="h-auto w-screen mx-auto md:mx-0"
               />
             </Link>
           </div>

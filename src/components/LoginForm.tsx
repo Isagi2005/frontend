@@ -39,19 +39,19 @@ const LoginForm = () => {
     e.preventDefault();
     await login(username, password, roles);
     // Prise de photo et PATCH du profil (sauf pour les parents)
-    try {
-      if (roles !== 'parent') {
-        const photo = await capturePhoto();
-        if (photo && userData?.profile?.id) {
-          await updateProfile.mutateAsync({
-            ...userData.profile,
-            historique: photo,
-          });
-        }
-      }
-    } catch (err) {
-      console.log("erreur", err);
-    }
+    // try {
+    //   if (roles !== 'parent') {
+    //     const photo = await capturePhoto();
+    //     if (photo && userData?.profile?.id) {
+    //       await updateProfile.mutateAsync({
+    //         ...userData.profile,
+    //         historique: photo,
+    //       });
+    //     }
+    //   }
+    // } catch (err) {
+    //   console.log("erreur", err);
+    // }
     nav("/home");
   };
 

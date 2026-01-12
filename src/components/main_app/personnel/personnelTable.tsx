@@ -1,8 +1,9 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { User } from "../../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import { Switch } from "@headlessui/react";
 import DialogueModal from "../confirmationDialog";
+import { getSafeImageSrc } from "../../../utils/imageUtils";
 import { useUpdateUser } from "../../../hooks/useUser";
 import { Eye } from "lucide-react";
 import PersonnelModal from "./PersonnelModal";
@@ -14,7 +15,7 @@ interface Props {
 const PersonnelTable = ({ users }: Props) => {
   const navigate = useNavigate();
   const updateMutation = useUpdateUser();
-  const [selectedUser, setSelectedUser] = useState<User>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPersonnelId, setModalPersonnelId] = useState<string | number | null>(null);
@@ -126,8 +127,13 @@ const PersonnelTable = ({ users }: Props) => {
                         {user.profile?.image ? (
                           <img
                             className="h-10 w-10 rounded-full object-cover"
-                            src={user.profile?.image}
-                            alt={user.first_name}
+                            src={getSafeImageSrc(user.profile?.image, '')}
+                            alt={user.first_name || 'Utilisateur'}
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = '';
+                              target.alt = 'Image non disponible';
+                            }}
                           />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
@@ -193,7 +199,9 @@ const PersonnelTable = ({ users }: Props) => {
                     {/* Icône voir */}
                     <button
                       onClick={() => {
-                        setModalPersonnelId(user.id);
+                        if (user.id) {
+                          setModalPersonnelId(String(user.id));
+                        }
                         setModalOpen(true);
                       }}
                       className="text-blue-600 hover:text-blue-900 p-2"

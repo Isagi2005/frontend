@@ -22,25 +22,25 @@ export interface PaiementHistorique {
 const paiementApi = {
   // Récupérer tous les paiements
   get: async (): Promise<Paiement[]> => {
-    const { data } = await api.get("api/paiement/");
+    const { data } = await api.get("api/paiement/") as { data: Paiement[] };
     return data;
   },
 
   // Récupérer paiements par étudiant
   getByStudent: async (etudiantId: number): Promise<Paiement[]> => {
-    const { data } = await api.get(`api/paiement/?etudiant=${etudiantId}`);
+    const { data } = await api.get(`api/paiement/?etudiant=${etudiantId}`) as { data: Paiement[] };
     return data;
   },
 
   // Récupérer un paiement spécifique
   getOne: async (id: number): Promise<Paiement> => {
-    const { data } = await api.get(`api/paiement/${id}/`);
+    const { data } = await api.get(`api/paiement/${id}/`) as { data: Paiement };
     return data;
   },
 
   // Ajouter un paiement
   add: async (paiement: Paiement): Promise<Paiement> => {
-    const { data } = await api.post("api/paiement/", paiement);
+    const { data } = await api.post("api/paiement/", paiement) as { data: Paiement };
     return data;
   },
 
@@ -53,13 +53,13 @@ const paiementApi = {
       description: paiement.description || "",
       datePaiement: paiement.datePaiement || new Date().toISOString().split("T")[0],
       effectuePar: paiement.effectuePar ?? null,
-    });
+    }) as { data: Paiement };
     return data;
   },
 
   // Modifier partiellement un paiement (PATCH)
   patch: async (paiement: Partial<Paiement> & { id: number }): Promise<Paiement> => {
-    const { data } = await api.patch(`api/paiement/${paiement.id}/`, paiement);
+    const { data } = await api.patch(`api/paiement/${paiement.id}/`, paiement) as { data: Paiement };
     return data;
   },
 
@@ -76,7 +76,7 @@ const paiementApi = {
   ): Promise<PaiementHistorique[]> => {
     const { data } = await api.get("api/paiement/historique/", {
       params: { classe_id: classeId, annee_scolaire: annee, mois },
-    });
+    }) as { data: PaiementHistorique[] };
     return data;
   },
 
@@ -85,7 +85,7 @@ const paiementApi = {
     classeId: number,
     annee: string,
     mois: string
-  ): Promise<any> => {
+  ): Promise<unknown> => {
     const { data } = await api.post("api/paiement/envoyer-rapport/", {
       classe_id: classeId,
       annee_scolaire: annee,
@@ -95,9 +95,9 @@ const paiementApi = {
   },
   // Ajouter plusieurs paiements
   addMultiple: async (paiements: Paiement[]): Promise<Paiement[]> => {
-  const { data } = await api.post("api/paiement/multiple/", paiements);
-  return data;
-},
+    const { data } = await api.post("api/paiement/multiple/", paiements) as { data: Paiement[] };
+    return data;
+  },
 
 };
 

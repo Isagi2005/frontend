@@ -1,5 +1,6 @@
 import Fuse from "fuse.js";
 import { routesByRole } from "./routes/routeByRole";
+import type { RouteObject } from "react-router-dom";
 
 export interface VoiceRoute {
   path: string;
@@ -7,29 +8,50 @@ export interface VoiceRoute {
   keywords?: string[];
 }
 
-// Typage strict pour l'accès aux routes
-import type { routesByRole as routesByRoleType } from "./routes/routeByRole";
-type Role = keyof typeof routesByRoleType;
 
-type RawRoute = {
-  path: string;
+interface RawRoute extends Omit<RouteObject, 'children' | 'element'> {
   element: React.ReactNode;
   label?: string;
   keywords?: string[];
-};
+  children?: RawRoute[];
+  roles?: string[];
+}
 
 export function getRoutesForRole(role: string): VoiceRoute[] {
   // On ne retourne que les routes enrichies pour le rôle donné
-  const rawRoutes = (routesByRole as Record<string, RawRoute[]>)[role] || [];
-  return rawRoutes.map(route => ({
-    path: route.path,
-    label: route.label || (route.element as any)?.type?.name || route.path,
-    keywords: route.keywords || []
-  }));
+  const rawRoutes = (routesByRole as unknown as Record<string, RawRoute[]>)[role] || [];
+  
+  // Fonction récursive pour extraire toutes les routes, y compris les sous-routes
+  const extractRoutes = (routes: RawRoute[]): VoiceRoute[] => {
+    return routes.flatMap(route => {
+      // S'assurer que path est une chaîne non vide
+      const path = route.path ?? '';
+      
+      // Créer un label par défaut basé sur le nom du composant ou le chemin
+      const elementName = (route.element as { type?: { name?: string } })?.type?.name;
+      const defaultLabel = elementName || (typeof path === 'string' ? path.split('/').pop() : '') || 'Sans nom';
+      const label = route.label || defaultLabel;
+      
+      const baseRoute: VoiceRoute = {
+        path,
+        label,
+        keywords: route.keywords || []
+      };
+      
+      // Ignorer les routes sans chemin valide
+      if (!path) return [];
+      
+      // Ajouter les sous-routes si elles existent
+      const childRoutes = route.children ? extractRoutes(route.children) : [];
+      return [baseRoute, ...childRoutes];
+    });
+  };
+  
+  return extractRoutes(rawRoutes);
 }
 
 export function createRouteFuse(routes: VoiceRoute[]): Fuse<VoiceRoute> {
-  return new Fuse(routes, {
+  return new Fuse<VoiceRoute>(routes, {
     keys: ["label", "path", "keywords"],
     threshold: 0.6, // ← plus permissif
     includeScore: true, // pour debug si besoin

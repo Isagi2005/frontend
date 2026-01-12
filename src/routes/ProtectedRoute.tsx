@@ -9,13 +9,26 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const auth = useAuth();
   const location = useLocation();
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
-    setUserRole(localStorage.getItem("role"));
-  }, [isAuthenticated]); // Rafraîchir le rôle quand l'authentification change
+    const role = localStorage.getItem("role");
+    setUserRole(role);
+  }, [auth?.isAuthenticated]); // Rafraîchir le rôle quand l'authentification change
+
+  // Initialiser le rôle depuis localStorage immédiatement
+  if (!userRole) {
+    const role = localStorage.getItem("role");
+    setUserRole(role);
+  }
+
+  if (!auth) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  const { isAuthenticated, isLoading } = auth;
 
   if (isLoading) {
     return (
@@ -29,7 +42,7 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && userRole && !allowedRoles.includes(userRole)) {
+  if (allowedRoles && allowedRoles.length > 0 && (!userRole || !allowedRoles.includes(userRole))) {
     return <Navigate to="/unauthorized" replace />;
   }
 

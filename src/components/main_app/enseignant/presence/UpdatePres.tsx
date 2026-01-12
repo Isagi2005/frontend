@@ -3,10 +3,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { presenceEtudiantProfile, statut } from "../../../../api/presenceApi";
 import { Check, Edit, X } from "lucide-react";
-import { useGetPresEtudiant, useUpdatePres } from "../../../../hooks/usePresence";
+import { useUpdatePres } from "../../../../hooks/usePresence";
 
-const UpdatePres = () => {
-  const { data: displayedData = [], isLoading } = useGetPresEtudiant();
+const UpdatePres = ({ displayedData }: { displayedData: presenceEtudiantProfile[] }) => {
   const [editId, setEditId] = useState<string | null>(null);
   const updateMutation = useUpdatePres();
   const { register, handleSubmit, reset, setValue } =
@@ -69,8 +68,9 @@ const UpdatePres = () => {
             reset()
             setEditId(null);
           },
-          onError: (err: { response?: { data?: { detail?: string } } }) => {
-            toast.error(err?.response?.data?.detail || "Echec de la modification!");
+          onError: (error: Error) => {
+            console.error('Update error:', error);
+            toast.error("Echec de la modification!");
           },
         }
       );
@@ -87,8 +87,8 @@ const UpdatePres = () => {
   const coursInfo = displayedData && displayedData[0]
     ? {
         matiere: displayedData[0].coursName || '',
-        classe: displayedData[0].classeName || '',
-        date: displayedData[0].coursDate || '',
+        classe: displayedData[0]?.coursName || '',
+        date: displayedData[0]?.cours || '',
       }
     : { matiere: '', classe: '', date: '' };
 
@@ -155,7 +155,7 @@ const UpdatePres = () => {
                       <select
                         defaultValue={presence.statut}
                         {...register("statut")}
-                        onChange={(e) => handleChange(e.target.value)}
+                        onChange={(e) => handleChange(e.target.value as statut)}
                         className="border rounded px-2 py-1"
                       >
                         <option value="P">Présent</option>

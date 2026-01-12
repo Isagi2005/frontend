@@ -3,7 +3,6 @@ import rapportApi, {
   Paiement,
   RapportDetail,
 } from "../api/rapportEcolageApi";
-import { NotificationParams } from "../api/rapportEcolageApi";
 
 // 🔹 GET : Tous les rapports
 export const useGetRapports = () => {

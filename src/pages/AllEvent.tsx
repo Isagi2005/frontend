@@ -15,16 +15,27 @@ const AllEvents = () => {
   const filteredEvents = useMemo(() => {
     if (!events) return [];
 
-    return events
-      .filter((ev) => ev.titre.toLowerCase().includes(searchTerm.toLowerCase()))
-      .filter((ev) =>
-        eventType === "all" ? true : ev.type?.toLowerCase() === eventType
+    // S'assurer que events est un tableau
+    const eventsArray = Array.isArray(events) ? events : [];
+    
+    return eventsArray
+      .filter((ev) => 
+        ev.titre?.toLowerCase().includes(searchTerm.toLowerCase())
       )
+      .filter((ev) => {
+        if (eventType === "all") return true;
+        // Utilisation de typeEvent qui est la propriété correcte selon l'interface EventType
+        const eventTypeLower = (ev.typeEvent || '').toLowerCase().trim();
+        return eventTypeLower === eventType.toLowerCase().trim();
+      })
       .sort((a, b) => {
+        const dateA = a.datedebut || a.dateD;
+        const dateB = b.datedebut || b.dateD;
+        
         if (sortBy === "recent") {
-          return new Date(b.dateD).getTime() - new Date(a.dateD).getTime();
+          return new Date(dateB).getTime() - new Date(dateA).getTime();
         } else if (sortBy === "anciens") {
-          return new Date(a.dateD).getTime() - new Date(b.dateD).getTime();
+          return new Date(dateA).getTime() - new Date(dateB).getTime();
         }
         return 0;
       });
@@ -95,7 +106,7 @@ const AllEvents = () => {
               />
               <div className="p-5">
                 <span className="text-sm text-gray-400">
-                  {item.dateD} - {item.dateF}
+                  {item.datedebut || item.dateD} - {item.datefin || item.dateF}
                 </span>
                 <h2 className="text-xl font-semibold text-blue-700 mt-2">
                   {item.titre}
@@ -105,7 +116,7 @@ const AllEvents = () => {
                 </p>
                 <div className="mt-3 flex justify-between items-center">
                   <span className="bg-blue-100 text-blue-800 px-2 py-1 text-xs rounded-full">
-                    {item.type}
+                    {item.typeEvent || 'Non spécifié'}
                   </span>
                   <button className="text-sm text-blue-600 hover:underline">
                     Détails →

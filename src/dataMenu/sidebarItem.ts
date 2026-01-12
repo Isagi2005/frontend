@@ -4,7 +4,7 @@ import { MdHistory, MdOutlineDashboard, MdPayment } from "react-icons/md";
 import { PiStudentFill } from "react-icons/pi";
 import { FaPen, FaUsersGear } from "react-icons/fa6";
 import { TbReport, TbUsersPlus } from "react-icons/tb";
-// import { FaGenderless, FaMoneyCheckAlt, FaPen } from "react-icons/fa";
+import { FaGenderless, FaMoneyCheckAlt, FaMoneyBillWave } from "react-icons/fa";
 import { HiBookOpen } from "react-icons/hi";
 import {  SiBookstack } from "react-icons/si";
 import { RiStickyNoteAddFill } from "react-icons/ri";
@@ -24,12 +24,12 @@ export const directionItem: sidebarType[] = [
     link: "",
     icon: ChartPie,
     sous_menu:[
-      // {
-      //   id: 1,
-      //   menu: "Financière",
-      //   link: "dashboard",
-      //   icon: MdOutlineDashboard,
-      // },
+      {
+        id: 1,
+        menu: "Financière",
+        link: "dashboard",
+        icon: MdOutlineDashboard,
+      },
       {
         id: 2,
         menu: "Pedagogique",
@@ -57,24 +57,24 @@ export const directionItem: sidebarType[] = [
         icon: FaPen,
       },
       
-      // {
-      //   id: 3,
-      //   menu: "Recrutement",
-      //   link: "contenu/recrutement",
-      //   icon: TbUsersPlus,
-      // },
+      {
+        id: 3,
+        menu: "Recrutement",
+        link: "contenu/recrutement",
+        icon: TbUsersPlus,
+      },
       {
         id: 4,
         menu: "Autre",
         link: "contenu/autre",
         icon: TbUsersPlus,
       },
-      // {
-      //   id: 5,
-      //   menu: "Services",
-      //   link: "contenu/services",
-      //   icon: TbUsersPlus,
-      // },
+      {
+        id: 5,
+        menu: "Services",
+        link: "contenu/services",
+        icon: TbUsersPlus,
+      },
     ],
   },
   {
@@ -121,12 +121,12 @@ export const directionItem: sidebarType[] = [
     link: "",
     icon: TbReport,
     sous_menu: [
-      // {
-      //   id: 1,
-      //   menu: "Financier",
-      //   link: "rapport/financier",
-      //   icon: FaMoneyBillTransfer,
-      // },
+      {
+        id: 1,
+        menu: "Financier",
+        link: "rapport/financier",
+        icon: FaMoneyBillWave,
+      },
       {
         id: 1,
         menu: "Pedagogique",
@@ -141,26 +141,26 @@ export const directionItem: sidebarType[] = [
     link: "com",
     icon: LucideMessageCircleMore,
   },
-  // {
-  //   id: 7,
-  //   menu: "Gestion des Employés",
-  //   link: "comFinance",
-  //   icon: FaGenderless, 
-  //   sous_menu: [
-  //     {
-  //       id: 1,
-  //       menu: "Employés",
-  //       link: "gestion/employe",
-  //       icon: FaMoneyCheckAlt, 
-  //     },
-  //     {
-  //       id: 2,
-  //       menu: "Demande de Congé/ Permission",
-  //       link: "conges",
-  //       icon: MdOutlineDashboard,
-  //     },
-  //   ],
-  // },
+  {
+    id: 7,
+    menu: "Gestion des Employés",
+    link: "comFinance",
+    icon: FaGenderless, 
+    sous_menu: [
+      {
+        id: 1,
+        menu: "Employés",
+        link: "gestion/employe",
+        icon: FaMoneyCheckAlt, 
+      },
+      {
+        id: 2,
+        menu: "Demande de Congé/ Permission",
+        link: "conges",
+        icon: MdOutlineDashboard,
+      },
+    ],
+  },
 ];
 
 export const financeItem: sidebarType[] = [

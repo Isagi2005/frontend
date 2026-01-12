@@ -5,7 +5,6 @@ import {
   CardContent,
   Typography,
   Box,
-  Grid,
   Paper,
   Chip,
   Tab,
@@ -16,16 +15,6 @@ import {
   Button
 } from "@mui/material";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import {
   BookOpen,
   BarChart2,
   PieChartIcon,
@@ -35,7 +24,6 @@ import { useGetDashEnseignant, useGetDashFilters } from "../../../../hooks/useDa
 import DashboardStatsCards from "./DashboardStatsCards";
 import DashboardPresence from "./DashboardPresence";
 import DashboardPerformance from "./DashboardPerformance";
-import DashboardMatiere from "./DashboardMatiere";
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -276,8 +264,8 @@ export const EnseignantDashboard: React.FC = () => {
         {/* Contenu de l'onglet Par matière */}
         <TabPanel value={tabValue} index={2}>
           <Box mt={2}>
-            <Grid container>
-              <Grid item xs={12}>
+            <Box display="flex" flexDirection="column">
+              <Box width="100%">
                 <Card>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
@@ -375,8 +363,8 @@ export const EnseignantDashboard: React.FC = () => {
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </Box>
         </TabPanel>
       </Paper>

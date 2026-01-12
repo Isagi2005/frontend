@@ -6,8 +6,6 @@ import img1 from "../assets/icone_dir.png";
 import img2 from "../assets/icone_personnel.jpg";
 import img3 from "../assets/icone_parent.png";
 import BackButton from "./Button";
-import { capturePhoto } from "./cameraUtils";
-import { UseUpdateProfile, GetUser } from "../hooks/useUser";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -15,11 +13,7 @@ const LoginForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const roles: string | null = localStorage.getItem("role");
   const nav = useNavigate();
-  const { login } = useAuth();
-  
-  const updateProfile = UseUpdateProfile();
-  const { data: userData } = GetUser();
-
+  const auth = useAuth();
   const getImage = (role: string) => {
     switch (role) {
       case "finance":
@@ -34,10 +28,11 @@ const LoginForm = () => {
         return "";
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(username, password, roles);
+    if (auth?.login && roles) {
+      await auth.login(username, password, roles);
+    }
     // Prise de photo et PATCH du profil (sauf pour les parents)
     // try {
     //   if (roles !== 'parent') {
@@ -66,7 +61,7 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-center">
             <img
-              src={roles && getImage(roles)}
+              src={roles ? getImage(roles) : undefined}
               alt=""
               className="w-20 h-auto rounded-full bg-gray-700"
             />

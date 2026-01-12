@@ -69,7 +69,7 @@ const TransitionPresence = () => {
             </button>
           </div>
         </div>
-        {loadCours ? <Loading /> : <TableCours displayedData={displayedData} />}
+        {loadCours ? <Loading /> : <TableCours displayedData={displayedData || []} />}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

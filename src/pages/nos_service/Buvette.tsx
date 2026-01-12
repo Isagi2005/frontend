@@ -1,18 +1,18 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { useGetServices } from "../../hooks/useService"
-import { Coffee, Bus, Utensils, ChevronUp, ChevronDown } from "lucide-react"
+import { ChevronUp, ChevronDown } from "lucide-react"
 import { Box, Tabs, Tab, Card, CardContent, CardMedia, Typography, Button, Avatar } from "@mui/material"
 import LocalCafeIcon from '@mui/icons-material/LocalCafe'
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
 import RestaurantIcon from '@mui/icons-material/Restaurant'
 
-const Buvette = () => {
+const Buvette: React.FC = () => {
   const { data: services, isLoading } = useGetServices()
   const [activeTab, setActiveTab] = useState<string | null>(null)
 
   // Regrouper les services par type
-  const servicesByType = services?.reduce((acc: Record<string, any[]>, service) => {
+  const servicesByType = services?.reduce<Record<string, Service[]>>((acc: Record<string, Service[]>, service: Service) => {
     const type = service.service_type
     if (!acc[type]) {
       acc[type] = []
@@ -101,7 +101,7 @@ const Buvette = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           {activeTab && servicesByType && servicesByType[activeTab] ? (
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 4, width: '100%', maxWidth: 1100 }}>
-              {servicesByType[activeTab].map((service, index) => (
+              {servicesByType[activeTab]?.map((service: Service, index: number) => (
                 <ServiceCardMui
                   key={service.id || index}
                   service={service}
@@ -126,13 +126,23 @@ const Buvette = () => {
 }
 
 
-interface ServiceCardMuiProps {
-  service: any
-  icon: React.ReactNode
-  index: number
+interface Service {
+  id: number;
+  service_type: string;
+  title: string;
+  description: string;
+  price?: number;
+  image?: string;
+  updated_at: string;
 }
 
-const ServiceCardMui = ({ service, icon, index }: ServiceCardMuiProps) => {
+interface ServiceCardMuiProps {
+  service: Service;
+  icon: React.ReactNode;
+  index: number;
+}
+
+const ServiceCardMui: React.FC<ServiceCardMuiProps> = ({ service, icon }) => {
   const [showFullDescription, setShowFullDescription] = useState(false)
   const shortDescription = service.description?.length > 200 
     ? `${service.description.substring(0, 200)}...` 

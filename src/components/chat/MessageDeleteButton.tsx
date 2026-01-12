@@ -9,8 +9,9 @@ interface MessageDeleteButtonProps {
 }
 
 const MessageDeleteButton: React.FC<MessageDeleteButtonProps> = ({ messageId, onDelete, disabled, icon }) => {
-  const { mutate: deleteMessage, isLoading } = useDeleteMessage();
+  const { mutate: deleteMessage } = useDeleteMessage();
   const [confirm, setConfirm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = () => {
     if (!confirm) {
@@ -18,9 +19,16 @@ const MessageDeleteButton: React.FC<MessageDeleteButtonProps> = ({ messageId, on
       setTimeout(() => setConfirm(false), 2500); // Reset confirm after 2.5s
       return;
     }
+    setIsLoading(true);
     deleteMessage(messageId, {
-      onSuccess: onDelete,
-      onError: () => alert("Erreur lors de la suppression du message."),
+      onSuccess: () => {
+        setIsLoading(false);
+        onDelete();
+      },
+      onError: () => {
+        setIsLoading(false);
+        alert("Erreur lors de la suppression du message.");
+      },
     });
   };
 

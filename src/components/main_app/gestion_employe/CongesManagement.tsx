@@ -369,9 +369,11 @@ const CongesManagement = () => {
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => {
-                                setSelectedEmployee(employee.id)
-                                setShowForm(true)
-                                setEditingConge(null)
+                                if (employee.id) {
+                                  setSelectedEmployee(employee.id)
+                                  setShowForm(true)
+                                  setEditingConge(null)
+                                }
                               }}
                               className="inline-flex items-center px-3 py-1.5 rounded-md text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-sm transition-all duration-200"
                               disabled={isLoading}
@@ -383,8 +385,10 @@ const CongesManagement = () => {
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => {
-                                setSelectedEmployee(employee.id)
-                                setShowSuivi(true)
+                                if (employee.id) {
+                                  setSelectedEmployee(employee.id)
+                                  setShowSuivi(true)
+                                }
                               }}
                               className="inline-flex items-center px-3 py-1.5 rounded-md text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-sm transition-all duration-200"
                               disabled={isLoading}

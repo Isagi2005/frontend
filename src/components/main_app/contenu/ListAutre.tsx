@@ -15,26 +15,6 @@ import { Home, FileText } from "lucide-react";
 const FooterIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-4 w-4"
-  >
-    <path d="M4 15l4-8 4 8" />
-    <path d="M12 15l4-8 4 8" />
-    <path d="M2 21h20" />
-  </svg>
-);
-
-// Icône personnalisée pour le dashboard
-const LayoutDashboardIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
     width="20"
     height="20"
     viewBox="0 0 24 24"

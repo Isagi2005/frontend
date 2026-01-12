@@ -37,7 +37,7 @@ const Accueil = ({ data }: PageProps) => {
     imagesbackend.length > 0 ? `url(${imagesbackend[currentImage]})` : "none",
 }}
     >
-      <div className="absolute inset-0  bg-black/60"></div>
+      <div className="absolute inset-0 bg-black/60"></div>
       <div className="relative z-10 text-center text-white px-6 max-w-3xl">
         {/* Titre toujours visible */}
         <h1 className="text-4xl md:text-6xl text-emerald-100 font-mono font-bold mb-6">{data.titre}</h1>

@@ -1,6 +1,17 @@
 import { Dialog, DialogTitle, Description } from "@headlessui/react";
-import { useState } from "react";
 import { toast } from "react-toastify";
+import type { User } from "../../api/userApi";
+import type { Dispatch, SetStateAction } from "react";
+import type { UseMutationResult } from "@tanstack/react-query";
+
+interface DialogueModalProps {
+  description: string;
+  selectedId: User | null;
+  setSelectedId: Dispatch<SetStateAction<User | null>>;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  mutation: UseMutationResult<User, Error, User, unknown>;
+}
 
 const DialogueModal = ({
   description,
@@ -9,20 +20,22 @@ const DialogueModal = ({
   isOpen,
   setIsOpen,
   mutation,
-}) => {
+}: DialogueModalProps) => {
   const handleUpdate = () => {
-    mutation.mutate(selectedId, {
-      onSuccess: () => {
-        if (selectedId.is_active === true) {
-          toast.success(`Utilisateur activé !`);
-        } else {
-          toast.success(`Utilisateur desactivé !`);
-        }
-      },
-      onError: () => {
-        toast.error("Echec de votre requête !");
-      },
-    });
+    if (selectedId) {
+      mutation.mutate(selectedId, {
+        onSuccess: () => {
+          if (selectedId.is_active === true) {
+            toast.success(`Utilisateur activé !`);
+          } else {
+            toast.success(`Utilisateur desactivé !`);
+          }
+        },
+        onError: () => {
+          toast.error("Echec de votre requête !");
+        },
+      });
+    }
     closeModal();
   };
 

@@ -28,7 +28,7 @@ export const useAddStudent = () => {
     mutationKey: ["students"],
     mutationFn: studentApi.add,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["students"] );
+      queryClient.invalidateQueries({ queryKey: ["students"] });
     },
   });
 };
@@ -39,7 +39,7 @@ export const useUpdateStudent = () => {
     mutationKey: ["students"],
     mutationFn: studentApi.update,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["students"] );
+      queryClient.invalidateQueries({ queryKey: ["students"] });
     },
   });
 };
@@ -50,7 +50,7 @@ export const useDeleteStudent = () => {
     mutationKey: ["students"],
     mutationFn: studentApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["students"] );
+      queryClient.invalidateQueries({ queryKey: ["students"] });
     },
   });
 };

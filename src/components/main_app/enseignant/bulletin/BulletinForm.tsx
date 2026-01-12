@@ -20,7 +20,11 @@ import {
   XCircle,
 } from "lucide-react"
 
-const BulletinForm: React.FC = () => {
+export interface BulletinFormProps {
+  onClose?: () => void;
+}
+
+const BulletinForm: React.FC<BulletinFormProps> = () => {
   const methods = useForm<BulletinFormValues>()
   const {
     register,
@@ -31,10 +35,10 @@ const BulletinForm: React.FC = () => {
   const { data: domaines = [], isLoading: isLoadingDomaines, isError: isErrorDomaines } = useGetDomaine()
   const { data: etudiants = [], isLoading: isLoadingEtudiants, isError: isErrorEtudiants } = useGetStudent()
   const { data: periodes = [], isLoading: isLoadingPeriodes, isError: isErrorPeriodes } = useGetPeriode()
-  const { mutate: addBulletin, isLoading: isSubmittingBulletin } = useCreateFullBulletin()
+  const { mutate: addBulletin } = useCreateFullBulletin()
 
   const [activeSection, setActiveSection] = useState<string>("general")
-  const isLoading = isLoadingDomaines || isLoadingEtudiants || isLoadingPeriodes || isSubmitting || isSubmittingBulletin
+  const isLoading = isLoadingDomaines || isLoadingEtudiants || isLoadingPeriodes || isSubmitting
 
   // Gestion loading global
   if (isLoadingDomaines || isLoadingEtudiants || isLoadingPeriodes) {

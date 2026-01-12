@@ -9,7 +9,14 @@ import type { User } from "../../api/userApi"
 import { useCreatePrivateConversation, useCreateGroupConversation } from "../../hooks/useChat"
 import { GetUser } from "../../hooks/useUser"
 
-const ChatContainer: React.FC = () => {
+// Props optionnelles pour des modes spécifiques (ex: mode="parent")
+interface ChatContainerProps {
+  mode?: "parent" | "default"
+  enfants?: any
+  user?: User
+}
+
+const ChatContainer: React.FC<ChatContainerProps> = () => {
   const [selectedConversation, setSelectedConversation] = useState<ConversationDetail | null>(null)
   const [showUserList, setShowUserList] = useState(false)
   const [showGroupModal, setShowGroupModal] = useState(false)

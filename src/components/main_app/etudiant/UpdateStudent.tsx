@@ -29,6 +29,15 @@ const UpdateStudent = ({ selectedId }: Props) => {
     "parent"
   );
   const { data: students } = UseRetrieve(selectedId + "");
+  
+  const getFieldValueAsString = (value: unknown): string => {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number') return value.toString();
+    if (value && typeof value === 'object' && 'id' in value) {
+      return (value as { id: number }).id.toString();
+    }
+    return '';
+  };
 
   const {
     register,
@@ -112,6 +121,8 @@ const UpdateStudent = ({ selectedId }: Props) => {
             render={({ field }) => (
               <select
                 {...field}
+                value={getFieldValueAsString(field.value)}
+                onChange={(e) => field.onChange(e.target.value)}
                 className="w-full p-2 focus:outline-none bg-white"
               >
                 <option value="H">Garçon</option>
@@ -180,6 +191,8 @@ const UpdateStudent = ({ selectedId }: Props) => {
             render={({ field }) => (
               <select
                 {...field}
+                value={getFieldValueAsString(field.value)}
+                onChange={(e) => field.onChange(e.target.value)}
                 className="w-full p-2 focus:outline-none bg-white"
               >
                 <option value="">--- Sélectionnez une classe ---</option>
@@ -187,7 +200,7 @@ const UpdateStudent = ({ selectedId }: Props) => {
                   <option value="">Chargement...</option>
                 ) : (
                   classes?.map((classItem) => (
-                    <option key={classItem.id} value={classItem.id}>
+                    <option key={classItem.id} value={classItem.id.toString()}>
                       {classItem.nom}
                     </option>
                   ))
@@ -210,6 +223,8 @@ const UpdateStudent = ({ selectedId }: Props) => {
             render={({ field }) => (
               <select
                 {...field}
+                value={getFieldValueAsString(field.value)}
+                onChange={(e) => field.onChange(e.target.value)}
                 className="w-full p-2 focus:outline-none bg-white"
               >
                 <option value="">--- Parent ---</option>
@@ -217,7 +232,7 @@ const UpdateStudent = ({ selectedId }: Props) => {
                   <option value="">Chargement...</option>
                 ) : (
                   listParent?.map((parent) => (
-                    <option key={parent.id} value={parent.id}>
+                    <option key={parent.id || 0} value={(parent.id || 0).toString()}>
                       {parent.first_name} {parent.last_name}
                     </option>
                   ))

@@ -340,7 +340,7 @@ const PaieDetailsModal: React.FC<PaieDetailsProps> = ({ employeId, employeNom, e
                                 )}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-slate-500">{formatDate(paie.datePaiement)}</div>
+                                <div className="text-slate-500">{formatDate(paie.datePaiement || "")}</div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-center">
                                 <div className="flex items-center justify-center space-x-2">
@@ -422,7 +422,7 @@ const PaieDetailsModal: React.FC<PaieDetailsProps> = ({ employeId, employeNom, e
                           </button>
                         </div>
                         <div className="p-6">
-                          <FactureForm paie={selectedPaieForFacture} />
+                          <FactureForm paie={selectedPaieForFacture} onClose={() => setSelectedPaieForFacture(null)} />
                         </div>
                       </motion.div>
                     )}

@@ -20,7 +20,7 @@ const statApi = {
   },
   async getPresenceStatsEleve(eleveId: number): Promise<PresenceStatsEleveMonth[]> {
     const { data } = await api.get(`/api/stats/presence/eleve/${eleveId}/`);
-    return data;
+    return data as PresenceStatsEleveMonth[];
   },
   // API pour l'évolution des notes d'un élève
   async getEvolutionEleve(eleveId: number) {

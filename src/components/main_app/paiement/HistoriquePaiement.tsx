@@ -13,7 +13,7 @@ const HistoriquePaiement = () => {
   const [selectedMois, setSelectedMois] = useState("");
 
   const { data: annees } = useGet();
-  const { data: classes } = useGetClass(selectedAnnee);
+  const { data: classes } = useGetClass();
   const { data: historique, isLoading } = usePaiementHistorique(
     selectedClasse!,
     selectedAnnee,
@@ -134,7 +134,7 @@ const HistoriquePaiement = () => {
         {/* Résultats */}
         {isLoading ? (
           <p className="text-center text-gray-500">Chargement...</p>
-        ) : historique?.length > 0 ? (
+        ) : historique?.length && historique.length > 0 ? (
           <>
             <div className="overflow-x-auto rounded-lg border">
               <table className="min-w-full divide-y divide-gray-200 text-sm">
@@ -148,7 +148,7 @@ const HistoriquePaiement = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {historique.map((etudiant: any) => (
+                  {historique?.map((etudiant: any) => (
                     <tr key={etudiant.etudiant_id} className="hover:bg-gray-50">
                       <td className="px-6 py-3">{etudiant.nom}</td>
                       <td className="px-6 py-3">{etudiant.prenom}</td>

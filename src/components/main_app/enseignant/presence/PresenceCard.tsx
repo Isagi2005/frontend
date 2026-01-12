@@ -33,13 +33,13 @@ const PresenceCard = ({ etudiant, cours }: Props) => {
       statut: "P",
     },
   })
-  const { mutate, isLoading } = useAddPresEtudiant()
+  const { mutate, isPending } = useAddPresEtudiant()
   const [showHeureA, setShowHeureA] = useState(false)
   const [showRaison, setShowRaison] = useState(false)
 
   const statut = watch("statut")
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: "P" | "A" | "R") => {
     if (value === "R") {
       setShowHeureA(true)
       setShowRaison(false)
@@ -94,8 +94,8 @@ const PresenceCard = ({ etudiant, cours }: Props) => {
     <Card sx={{ borderRadius: 2, boxShadow: 1 }}>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          {etudiant.image ? (
-            <Avatar src={etudiant.image} alt={`${etudiant.prenom} ${etudiant.nom}`} sx={{ mr: 2 }} />
+          {etudiant.image && typeof etudiant.image === 'string' ? (
+            <Avatar src={etudiant.image as string} alt={`${etudiant.prenom} ${etudiant.nom}`} sx={{ mr: 2 }} />
           ) : (
             <Avatar sx={{ bgcolor: "primary.light", mr: 2 }}>{getInitials(etudiant.prenom, etudiant.nom)}</Avatar>
           )}
@@ -121,8 +121,8 @@ const PresenceCard = ({ etudiant, cours }: Props) => {
                 value={statut}
                 {...register("statut", { required: true })}
                 onChange={(e) => {
-                  handleStatusChange(e.target.value)
-                  setValue("statut", e.target.value)
+                  handleStatusChange(e.target.value as "P" | "A" | "R")
+                  setValue("statut", e.target.value as "P" | "A" | "R")
                 }}
               >
                 <MenuItem value="P">Présent</MenuItem>
@@ -168,11 +168,11 @@ const PresenceCard = ({ etudiant, cours }: Props) => {
             color="primary"
             fullWidth
             onClick={handleSubmit(onSubmit)}
-            disabled={isLoading}
-            startIcon={isLoading ? <CircularProgress size={16} /> : <Check size={16} />}
+            disabled={isPending}
+            startIcon={isPending ? <CircularProgress size={16} /> : <Check size={16} />}
             sx={{ mt: 1 }}
           >
-            {isLoading ? "Envoi..." : "Valider la présence"}
+            {isPending ? "Envoi..." : "Valider la présence"}
           </Button>
         </Box>
       </CardContent>

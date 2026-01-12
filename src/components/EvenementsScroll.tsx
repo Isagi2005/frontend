@@ -36,13 +36,13 @@ const HomeEvents = () => {
     return () => clearInterval(interval);
   }, [announcements.length]);
 
-  const formatDate = (dateString) => {
-    const options = { day: "numeric", month: "short", year: "numeric" };
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" };
     return new Date(dateString).toLocaleDateString("fr-FR", options);
   };
 
   // Obtenir le type d'événement avec la bonne couleur
-  const getEventTypeInfo = (type) => {
+  const getEventTypeInfo = (type: string) => {
     switch (type) {
       case "formation":
         return { label: "Formation", color: "bg-blue-100 text-blue-800" };

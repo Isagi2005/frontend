@@ -35,7 +35,7 @@ export const useAddConge = () => {
     mutationKey: ["conges"],
     mutationFn: congeApi.add,
     onSuccess: () => {
-      queryClient.invalidateQueries(["conges"]);
+      queryClient.invalidateQueries({ queryKey: ["conges"] });
     },
   });
 };
@@ -47,7 +47,7 @@ export const useUpdateConge = () => {
     mutationKey: ["conges"],
     mutationFn: congeApi.update,
     onSuccess: () => {
-      queryClient.invalidateQueries(["conges"]);
+      queryClient.invalidateQueries({ queryKey: ["conges"] });
     },
   });
 };
@@ -59,7 +59,7 @@ export const useDeleteConge = () => {
     mutationKey: ["conges"],
     mutationFn: congeApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries(["conges"]);
+      queryClient.invalidateQueries({ queryKey: ["conges"] });
     },
   });
 };
@@ -81,11 +81,14 @@ export const useCreateCongeForEmployee = () => {
       congeData: Omit<Conge, 'id' | 'employe'>;
     }) => congeApi.createForEmployee(employeeId, congeData),
     onSuccess: () => {
-      queryClient.invalidateQueries(['conges']);
+      queryClient.invalidateQueries({ queryKey: ["conges"] });
     },
   });
 };
 export const useGetConge = () => {
-  return useQuery(['conges'], congeApi.get);
+  return useQuery({
+    queryKey: ['conges'],
+    queryFn: congeApi.get
+  });
 };
 

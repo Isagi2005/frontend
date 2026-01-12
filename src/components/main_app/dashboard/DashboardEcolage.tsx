@@ -37,7 +37,7 @@ const DashboardEcolage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<"bar" | "pie" | "line">("bar")
   const { data: rapports, isLoading } = useGetRapports()
-  const { data: rapportDetails, isLoading: isDetailLoading } = useGetRapportDetails(selectedRapportId)
+  const { data: rapportDetails } = useGetRapportDetails(selectedRapportId)
 
   // Fermer le dropdown quand on clique ailleurs
   useEffect(() => {
@@ -201,7 +201,7 @@ const DashboardEcolage = () => {
                   <button
                     key={rapport.id}
                     onClick={() => {
-                      setSelectedRapportId(rapport.id)
+                      setSelectedRapportId(rapport.id || 0)
                       setIsDropdownOpen(false)
                     }}
                     className={classNames(

@@ -71,14 +71,6 @@ const PaiementDetails: React.FC<PaiementDetailsProps> = ({ etudiantId, etudiantN
     })
   }
 
-  const confirmDelete = (id: number) => {
-    const modal = document.getElementById("deleteModal")
-    if (modal) {
-      modal.classList.remove("hidden")
-      modal.setAttribute("data-id", id.toString())
-    }
-  }
-
   const handleEditClick = (paiement: any) => {
     setEditId(paiement.id)
     setEditedPaiementData((prev: any) => ({

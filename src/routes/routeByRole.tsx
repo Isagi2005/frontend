@@ -2,7 +2,7 @@ import ChatContainer from "../components/chat/ChatContainer";
 import ListClasse from "../components/main_app/classe/ListClasse";
 import ListAutre from "../components/main_app/contenu/ListAutre";
 import ListEvent from "../components/main_app/contenu/ListEvent";
-// import DashboardEcolage from "../components/main_app/dashboard/DashboardEcolage";
+import DashboardEcolage from "../components/main_app/dashboard/DashboardEcolage";
 // import EmployePage from "../components/main_app/employe/AjoutEmploye";
 import BulletinContainer from "../components/main_app/enseignant/bulletin/BulletinContainer";
 import PeriodeManagement from "../components/main_app/enseignant/bulletin/PeriodeManagement";
@@ -10,17 +10,17 @@ import TransitionPresence from "../components/main_app/enseignant/presence/Trans
 import RapportPedagogiqueBoard from "../components/main_app/enseignant/RapportPedagogiqueBoard";
 import DirectionDashboard from "../components/main_app/enseignant/stat/Dashboard";
 import { EnseignantDashboard } from "../components/main_app/enseignant/stat/DashboardE";
-// import CongesManagement from "../components/main_app/gestion_employe/CongesManagement";
+import CongesManagement from "../components/main_app/gestion_employe/CongesManagement";
 import ClasseList from "../components/main_app/paiement/ClasseList";
 import HistoriquePaiement from "../components/main_app/paiement/HistoriquePaiement";
-// import RapportFinancierList from "../components/main_app/paiement/RapportFinancierList";
+import RapportFinancierList from "../components/main_app/paiement/RapportFinancierList";
 import SelectClasse from "../components/main_app/paiement/SelectClasse";
 import DashboardContainer from "../components/main_app/parent/Container";
 import CreateUser from "../components/main_app/personnel/CreateUsers";
 import ListPersonnel from "../components/main_app/personnel/ListPersonnel";
 import RapportPedagogiqueDirectionBoard from "../components/main_app/RapportPedagogiqueDirectionBoard";
-// import RecrutementAdminPage from "../components/main_app/RecrutementAdminPage";
-// import ServiceManager from "../components/main_app/ServiceManager";
+import RecrutementAdminPage from "../components/main_app/RecrutementAdminPage";
+import ServiceManager from "../components/main_app/ServiceManager";
 import ListEtudiantPage from "../pages/enseignant/listEtudiantPage";
 import Demandes from "../pages/inscription/SectionInscription";
 import StatistiquesClassePage from '../pages/StatistiquesClasse';
@@ -34,12 +34,12 @@ export const routesByRole = {
     { path: "personnel/user", element: <ListPersonnel />, label: "Gestion des utilisateurs", keywords: ["utilisateur", "utilisateurs", "user", "personnel", "gestion personnel"] },
     { path: "periode", element: <PeriodeManagement />, label: "Gestion des périodes", keywords: ["période", "periodes", "gestion période", "trimestre", "semestre"] },
     { path: "createUser/", element: <CreateUser />, label: "Créer un utilisateur", keywords: ["créer utilisateur", "ajouter utilisateur", "nouvel utilisateur"] },
-    // { path: "dashboard", element: <DashboardEcolage />, label: "Tableau de bord financier", keywords: ["dashboard", "tableau de bord", "financier", "accueil", "statistiques"] },
+    { path: "dashboard", element: <DashboardEcolage />, label: "Tableau de bord financier", keywords: ["dashboard", "tableau de bord", "financier", "accueil", "statistiques"] },
     { path: "dashboard1", element: <DirectionDashboard />, label: "Tableau de bord pédagogique", keywords: ["dashboard", "tableau de bord", "pédagogique", "accueil", "statistiques"] },
-    // { path: "contenu/recrutement", element: <RecrutementAdminPage/>, label: "Recrutement", keywords: ["recrutement", "embauche", "nouvel employé"] },
-    // { path: "contenu/services", element: <ServiceManager/>, label: "Gestion des services", keywords: ["services", "gestion services", "prestations"] },
-    // { path: "rapport/financier", element: <RapportFinancierList/>, label: "Rapports financiers", keywords: ["rapport financier", "financier", "finance", "bilan"] },
-    // { path: "conges", element: <CongesManagement/>, label: "Gestion des congés", keywords: ["congés", "absences", "gestion congé", "vacances"] },
+    { path: "contenu/recrutement", element: <RecrutementAdminPage/>, label: "Recrutement", keywords: ["recrutement", "embauche", "nouvel employé"] },
+    { path: "contenu/services", element: <ServiceManager/>, label: "Gestion des services", keywords: ["services", "gestion services", "prestations"] },
+    { path: "rapport/financier", element: <RapportFinancierList/>, label: "Rapports financiers", keywords: ["rapport financier", "financier", "finance", "bilan"] },
+    { path: "conges", element: <CongesManagement/>, label: "Gestion des congés", keywords: ["congés", "absences", "gestion congé", "vacances"] },
     { path: "com", element: <ChatContainer />, label: "Messagerie", keywords: ["messagerie", "message", "chat", "communication"] },
     // { path: "gestion/employe", element: <EmployePage />, label: "Gestion des employés", keywords: ["employé", "employés", "gestion employé", "personnel"] },
     { path: "rapport/pedagogique", element: <RapportPedagogiqueDirectionBoard/>, label: "Rapports pédagogiques", keywords: ["rapport pédagogique", "pédagogie", "rapports", "journalier", "suivi"] },

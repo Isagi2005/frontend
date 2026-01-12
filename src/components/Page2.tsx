@@ -1,4 +1,5 @@
 import type { PresentationType } from "../api/siteApi";
+import { getSafeImageSrc } from "../utils/imageUtils";
 
 interface PageProps {
   presentations: PresentationType[];
@@ -37,9 +38,13 @@ const Page2 = ({ presentations }: PageProps) => {
                 <div className="relative overflow-hidden rounded-xl shadow-xl">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
                   <img
-                    src={data.image || "/placeholder.svg"}
+                    src={getSafeImageSrc(data.image, '/placeholder.svg')}
                     alt={data.titrePresentation}
                     className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
                   />
                   <div className="absolute bottom-4 left-4 z-20 bg-orange-600/90 text-white px-4 py-1 rounded-full text-sm font-medium">
                     {data.section}

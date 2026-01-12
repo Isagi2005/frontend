@@ -29,14 +29,16 @@ const Demandes = () => {
     return false;
   });
 
-  const sortedEtudiants = filteredData?.sort((a, b) => {
-    const dateA = new Date(a.dateDeDemande).getTime();
-    const dateB = new Date(b.dateDeDemande).getTime();
+  const sortedEtudiants = filteredData?.slice().sort((a, b) => {
+    // Gestion des dates potentiellement null ou undefined
+    const dateA = a.dateDeDemande ? new Date(a.dateDeDemande).getTime() : 0;
+    const dateB = b.dateDeDemande ? new Date(b.dateDeDemande).getTime() : 0;
     return sortBy === "recent" ? dateB - dateA : dateA - dateB;
   });
 
-  const totalPages = Math.ceil((sortedEtudiants?.length || 0) / itemsPerPage);
-  const displayedData = sortedEtudiants?.slice(
+  const safeSortedEtudiants = Array.isArray(sortedEtudiants) ? sortedEtudiants : [];
+  const totalPages = Math.ceil(safeSortedEtudiants.length / itemsPerPage);
+  const displayedData = safeSortedEtudiants.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -66,7 +68,7 @@ const Demandes = () => {
       </div>
 
       <div className="space-y-6">
-        {displayedData?.length > 0 ? (
+        {displayedData && displayedData.length > 0 ? (
           displayedData?.map((demande) => (
             <InscriptionCard key={demande.id} demande={demande} />
           ))

@@ -31,7 +31,7 @@ export const useAddPeriode = () => {
     mutationKey: ["periode"],
     mutationFn: bulletinApi.addPeriode,
     onSuccess: () => {
-      queryClient.invalidateQueries(["periode"] );
+      queryClient.invalidateQueries({queryKey:["periode"]} );
     },
   });
 }
@@ -42,7 +42,7 @@ export const useUpdatePeriode = () => {
     mutationKey: ["periode"],
     mutationFn: bulletinApi.updatePeriode,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["periode"] );
+      queryClient.invalidateQueries({queryKey:["periode"]} );
     },
   });
 }
@@ -53,7 +53,7 @@ export const useDeletePeriode = () => {
     mutationKey: ["periode"],
     mutationFn: bulletinApi.deletePeriode,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["periode"] );
+      queryClient.invalidateQueries({queryKey:["periode"]} );
     },
   });
 }
@@ -89,7 +89,7 @@ export const useAddDomaine = () => {
     mutationKey: ["domaine"],
     mutationFn: bulletinApi.addDomaine,
     onSuccess: () => {
-      queryClient.invalidateQueries(["domaine"] );
+      queryClient.invalidateQueries({queryKey:["domaine"]} );
     },
   });
 };
@@ -100,7 +100,7 @@ export const useUpdateDomaine = () => {
     mutationKey: ["domaine"],
     mutationFn: bulletinApi.updateDomaine,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["domaine"] );
+      queryClient.invalidateQueries({queryKey:["domaine"]} );
     },
   });
 };
@@ -111,7 +111,7 @@ export const useDeleteDomaine = () => {
     mutationKey: ["domaine"],
     mutationFn: bulletinApi.deleteDomaine,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["domaine"] );
+      queryClient.invalidateQueries({queryKey:["domaine"]} );
     },
   });
 };
@@ -119,7 +119,6 @@ export const useDeleteDomaine = () => {
 export const useGetBulletin = () => {
   return useQuery({
     staleTime: 5 * 60 * 1000, // 5 minutes
-    staleTime: 5 * 60 * 1000,
     queryKey: ["bulletin"],
     queryFn: bulletinApi.getBulletin,
   });
@@ -139,7 +138,7 @@ export const useDeleteBulletin = () => {
     mutationKey: ["bulletin"],
     mutationFn: bulletinApi.deleteBulletin,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["bulletin"] );
+      queryClient.invalidateQueries({queryKey:["bulletin"]} );
     },
   });
 };
@@ -182,7 +181,7 @@ export const useAddEvaluation = () => {
     mutationKey: ["evaluation"],
     mutationFn: bulletinApi.addEvaluation,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["evaluation"] );
+      queryClient.invalidateQueries({queryKey:["evaluation"]} );
     },
   });
 };
@@ -193,7 +192,7 @@ export const useUpdateEvaluation = () => {
     mutationKey: ["evaluation"],
     mutationFn: bulletinApi.updateEvaluation,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["evaluation"] );
+      queryClient.invalidateQueries({queryKey:["evaluation"]} );
     },
   });
 };
@@ -204,7 +203,7 @@ export const useDeleteEvaluation = () => {
     mutationKey: ["evaluation"],
     mutationFn: bulletinApi.deleteEvaluation,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["evaluation"] );
+      queryClient.invalidateQueries({queryKey:["evaluation"]} );
     },
   });
 };
@@ -215,8 +214,8 @@ export const useCreateFullBulletin = () => {
     mutationKey: ["bulletin"],
     mutationFn: bulletinApi.createFullBulletin,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["bulletin"] );
-      queryClient.invalidateQueries(["evaluation"] );
+      queryClient.invalidateQueries({queryKey:["bulletin"]} );
+      queryClient.invalidateQueries({queryKey:["evaluation"]} );
     },
   });
 };

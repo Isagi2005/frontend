@@ -1,5 +1,4 @@
 import api from "./api";
-import { User } from "./userApi";
 
 import { RapportPedagogique } from "../types/rapportPedagogique.types";
 
@@ -17,7 +16,7 @@ const prepareFormData = (rapport: RapportPedagogique): FormData => {
 
 const getRapports = async (): Promise<RapportPedagogique[]> => {
   const { data } = await api.get("api/rapport-pedagogique/");
-  return data;
+  return data as RapportPedagogique[];
 };
 
 const markRapportAsRead = async (id: number, lu: boolean): Promise<void> => {
@@ -29,18 +28,18 @@ const rapportPedagogiqueApi = {
   markAsRead: markRapportAsRead,
   retrieve: async (id: number): Promise<RapportPedagogique> => {
     const { data } = await api.get(`api/rapport-pedagogique/${id}/`);
-    return data;
+    return data as RapportPedagogique;
   },
   add: async (rapport: RapportPedagogique): Promise<RapportPedagogique> => {
     const formData = prepareFormData(rapport);
     const { data } = await api.post("api/rapport-pedagogique/", formData);
-    return data;
+    return data as RapportPedagogique;
   },
   update: async (rapport: RapportPedagogique): Promise<RapportPedagogique> => {
     if (!rapport.id) throw new Error("L'id du rapport est requis pour la mise à jour.");
     const formData = prepareFormData(rapport);
     const { data } = await api.put(`api/rapport-pedagogique/${rapport.id}/`, formData);
-    return data;
+    return data as RapportPedagogique;
   },
   delete: async (id: number): Promise<void> => {
     await api.delete(`api/rapport-pedagogique/${id}/`);
@@ -48,7 +47,7 @@ const rapportPedagogiqueApi = {
   getGenerics: async (params: Record<string, string | number>): Promise<RapportPedagogique[]> => {
     const query = new URLSearchParams(params as Record<string, string>).toString();
     const { data } = await api.get(`api/rapport-pedagogique/?${query}`);
-    return data;
+    return data as RapportPedagogique[];
   },
 };
 

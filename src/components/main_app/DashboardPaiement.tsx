@@ -1,22 +1,19 @@
 import { useMemo, useState } from "react";
-import { usePaiementHistorique } from "../../src/hooks/usePaiement";
-import { useGetAnneeScolaire, useGetClass } from "../../src/hooks/useClass";
+import { usePaiementHistorique } from "../../hooks/usePaiement";
+import { useGetClass } from "../../hooks/useClass";
+import { useGet } from "../../hooks/useAnnee";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { motion } from "framer-motion";
 
 const COLORS = ["#16a34a", "#dc2626"]; // Payé / Non payé
-const moisOptions = [
-  "JANVIER", "FEVRIER", "MARS", "AVRIL", "MAI", "JUIN",
-  "JUILLET", "AOUT", "SEPTEMBRE", "OCTOBRE", "NOVEMBRE", "DECEMBRE"
-];
 
 const DashboardPaiement = () => {
   const [selectedAnnee, setSelectedAnnee] = useState("");
   const [selectedClasse, setSelectedClasse] = useState<number | null>(null);
-  const { data: annees } = useGetAnneeScolaire();
+  const { data: annees } = useGet();
   const { data: classes } = useGetClass();
 
-  const { data: historique = [], isLoading } = usePaiementHistorique(selectedClasse!, selectedAnnee);
+  const { data: historique = [] } = usePaiementHistorique(selectedClasse!, selectedAnnee, "");
 
   const stats = useMemo(() => {
     const total = historique.length;

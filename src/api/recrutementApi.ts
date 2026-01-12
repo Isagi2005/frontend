@@ -2,23 +2,23 @@
 import api from "./api"
 
 const recrutementApi = {
-  getAll: () => api.get("api/contenu/recrutement/").then(res => res.data),
+  getAll: () => Promise.resolve(api.get("api/contenu/recrutement/").then(res => res.data)),
 
   getOne: (id: number) =>
-    api.get(`api/contenu/recrutement/${id}/`).then(res => res.data),
+    Promise.resolve(api.get(`api/contenu/recrutement/${id}/`).then(res => res.data)),
 
   create: (data: FormData) =>
-    api.post("api/contenu/recrutement/", data, {
+    Promise.resolve(api.post("api/contenu/recrutement/", data, {
       headers: { "Content-Type": "multipart/form-data" },
-    }).then(res => res.data),
+    }).then(res => res.data)),
 
- update: (id: number, data: FormData) =>
-        api.patch(`api/contenu/recrutement/${id}/`, data, { // Changé de put à patch
-          headers: { "Content-Type": "multipart/form-data" },
-        }).then(res => res.data),
+  update: (id: number, data: FormData) =>
+    Promise.resolve(api.patch(`api/contenu/recrutement/${id}/`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }).then(res => res.data)),
 
   delete: (id: number) =>
-    api.delete(`api/contenu/recrutement/${id}/`).then(res => res.data),
+    Promise.resolve(api.delete(`api/contenu/recrutement/${id}/`).then(res => res.data)),
 }
 
 export default recrutementApi

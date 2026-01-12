@@ -5,17 +5,13 @@ import {
   ComboboxOption,
 } from "@headlessui/react";
 import { useState } from "react";
-import { Controller } from "react-hook-form";
-
-interface Annee {
-  id: number;
-  anneeScolaire: string;
-}
+import { Controller, Control } from "react-hook-form";
+import { AnneeProfile } from "../../../api/anneeApi";
 
 interface Props {
   name: string;
-  control: any;
-  annees: Annee[];
+  control: Control<any>;
+  annees: AnneeProfile[];
   onCreate?: (newAnnee: string) => void;
 }
 

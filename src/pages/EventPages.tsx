@@ -1,8 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { GetOneEvent, useEvents } from "../hooks/useEvent";
+import type { EventType } from "../api/eventApi";
 import Loading from "../components/Loading";
 import AllEvents from "./AllEvent";
 import { ArrowLeft } from "lucide-react";
+
+// Using EventType from eventApi
 
 const EventPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,10 +13,10 @@ const EventPage = () => {
   const eventId = Number(id);
 
   // Fetch current event
-  const { data: event, isLoading, isError } = GetOneEvent(eventId);
+  const { data: event, isLoading, isError } = GetOneEvent(eventId) as { data: EventType | undefined, isLoading: boolean, isError: boolean };
 
   // Fetch all events for navigation
-  const { data: allEvents = [] } = useEvents();
+  const { data: allEvents = [] } = useEvents() as { data: EventType[] };
 
   if (isLoading) return <Loading />;
 
@@ -30,8 +33,7 @@ const EventPage = () => {
   // Find current index and calculate prev/next
   const currentIndex = allEvents.findIndex((e) => e.idevenement === eventId);
   const prevEvent = currentIndex > 0 ? allEvents[currentIndex - 1] : null;
-  const nextEvent =
-    currentIndex < allEvents.length - 1 ? allEvents[currentIndex + 1] : null;
+  const nextEvent = currentIndex < allEvents.length - 1 ? allEvents[currentIndex + 1] : null;
 
   const handleNavigate = (id: number) => {
     navigate(`/event/${id}`);
@@ -43,8 +45,7 @@ const EventPage = () => {
       <div>
         <button
           onClick={() => navigate(-1)}
-          className={` absolute top-4 left-4 flex items-center gap-2 px-4 py-2 text-black bg-transparent rounded-lg hover:bg-white transition shadow-md md:top-6 md:left-6
-          } `}
+          className="absolute top-4 left-4 flex items-center gap-2 px-4 py-2 text-black bg-transparent rounded-lg hover:bg-white transition shadow-md md:top-6 md:left-6"
         >
           <ArrowLeft size={20} />
           <span>Retour</span>
@@ -58,31 +59,33 @@ const EventPage = () => {
             <div className="lg:w-1/2">
               <div className="relative h-64 sm:h-80 md:h-96 lg:h-full overflow-hidden">
                 <img
-                  src={event?.image}
-                  alt={event?.titre}
+                  src={event?.image && typeof event.image === 'string' ? event.image : '/placeholder-event.jpg'}
+                  alt={event?.titre || 'Événement'}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/placeholder-event.jpg';
+                  }}
                 />
                 {/* Mobile date overlay */}
-                <div className="lg:hidden absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <div className="text-white">
-                    <div className="flex items-center space-x-2">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      <span>
-                        {event?.dateD} {event?.dateF && `au ${event?.dateF}`}
-                      </span>
-                    </div>
+                <div className="lg:hidden absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-4">
+                  <div className="text-white flex items-center space-x-2">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span>
+                      <span>{event?.datedebut} {event?.datefin && `au ${event.datefin}`}</span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -110,13 +113,13 @@ const EventPage = () => {
                     />
                   </svg>
                   <span>
-                    {event?.dateD} {event?.dateF && `au ${event?.dateF}`}
+                    <span>{event?.datedebut} {event?.datefin && `au ${event.datefin}`}</span>
                   </span>
                 </div>
               </div>
 
               {/* Description */}
-              <div className="prose max-w-none text-gray-700 mb-8 flex-grow">
+              <div className="prose max-w-none text-gray-700 mb-8 grow">
                 <h2 className="text-xl font-semibold text-orange-600 mb-4">
                   Description
                 </h2>
@@ -219,7 +222,7 @@ const EventPage = () => {
                     </svg>
                   </button>
                 ) : (
-                  <div className="w-24"></div> // Spacer to maintain layout
+                  <div className="w-24"></div>
                 )}
               </div>
             </div>

@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import paiementApi, { Paiement} from "../api/paiementApi";
 
-interface HistoriqueParams {
-  classeId: number;
-  annee: string;
-  mois: string;
-}
+// interface HistoriqueParams {
+//   classeId: number;
+//   annee: string;
+//   mois: string;
+// }
 
 // Récupérer l'historique des paiements
 export const usePaiementHistorique = (classeId: number, annee: string, mois: string) => {
@@ -50,7 +50,7 @@ export const useAddPaiement = () => {
     mutationKey: ["paiements"],
     mutationFn: paiementApi.add,
     onSuccess: () => {
-      queryClient.invalidateQueries(["paiements"]);
+      queryClient.invalidateQueries({ queryKey: ["paiements"] });
     },
   });
 };
@@ -66,9 +66,9 @@ export const useUpdatePaiement = () => {
       return paiementApi.update(paiement);
     },
     onSuccess: (_data, paiement) => {
-      queryClient.invalidateQueries(["paiements"]);
+      queryClient.invalidateQueries({ queryKey: ["paiements"] });
       if (paiement.etudiant) {
-        queryClient.invalidateQueries(["paiements", paiement.etudiant]);
+        queryClient.invalidateQueries({queryKey:["paiements", paiement.etudiant]});
       }
     },
   });
@@ -84,9 +84,9 @@ export const usePatchPaiement = () => {
       return paiementApi.patch(paiement);
     },
     onSuccess: (_data, paiement) => {
-      queryClient.invalidateQueries(["paiements"]);
+      queryClient.invalidateQueries({ queryKey: ["paiements"] });
       if (paiement.etudiant) {
-        queryClient.invalidateQueries(["paiements", paiement.etudiant]);
+        queryClient.invalidateQueries({queryKey: ["paiements", paiement.etudiant]});
       }
     },
   });
@@ -100,7 +100,7 @@ export const useDeletePaiement = () => {
     mutationKey: ["paiements"],
     mutationFn: paiementApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries(["paiements"]);
+      queryClient.invalidateQueries({ queryKey: ["paiements"] }); 
     },
   });
 };
@@ -128,7 +128,7 @@ export const useAddPaiementsMultiples = () => {
     mutationKey: ["paiements-multiples"],
     mutationFn: paiementApi.addMultiple,
     onSuccess: () => {
-      queryClient.invalidateQueries(["paiements"]);
+      queryClient.invalidateQueries({ queryKey: ["paiements"] });
     },
   });
 };

@@ -5,10 +5,10 @@ import {
   ComboboxOption,
 } from "@headlessui/react";
 import { useState } from "react";
-import { Controller } from "react-hook-form";
+import { Controller, Control } from "react-hook-form";
 
 interface Prof {
-  id: number;
+  id?: number;
   username: string;
   last_name: string;
   first_name: string;
@@ -16,7 +16,7 @@ interface Prof {
 
 interface Props {
   name: string;
-  control: any;
+  control: Control<any>;
   profs: Prof[];
 }
 

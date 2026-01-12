@@ -39,7 +39,7 @@ const EtudiantHeader: React.FC<EtudiantHeaderProps> = ({ eleve, onClose, isMobil
     >
       <X size={20} />
     </IconButton>
-    {eleve.image ? (
+    {eleve.image && typeof eleve.image === 'string' ? (
       <Avatar
         src={eleve.image}
         alt={`${eleve.prenom} ${eleve.nom}`}
@@ -65,7 +65,7 @@ const EtudiantHeader: React.FC<EtudiantHeaderProps> = ({ eleve, onClose, isMobil
       <Typography variant="h4" fontWeight="bold">
         {eleve.prenom} {eleve.nom}
       </Typography>
-      <Typography variant="h6">{eleve.classeName || "Classe non assignée"}</Typography>
+      <Typography variant="h6">{eleve.classeName as string || "Classe non assignée"}</Typography>
       <Chip
         label={`ID: ${eleve.id}`}
         size="small"

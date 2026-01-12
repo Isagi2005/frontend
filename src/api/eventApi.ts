@@ -33,15 +33,15 @@ const prepareFormData = (event: EventType): FormData => {
 const eventApi = {
   getEventPublic: async (): Promise<EventType[]> => {
     const { data } = await api.get("/events/list");
-    return data;
+    return data as EventType[];
   },
   getEvents: async (): Promise<EventType[]> => {
     const { data } = await api.get("dir/events/list");
-    return data;
+    return data as EventType[];
   },
   getOneEvent: async (id: number): Promise<EventType> => {
     const { data } = await api.get(`/events/list/${id}/`);
-    return data;
+    return data as EventType;
   },
 
   addEvents: async (event: EventType): Promise<EventType> => {
@@ -53,7 +53,7 @@ const eventApi = {
         "Content-Type": "multipart/form-data",
       },
     });
-    return data;
+    return data as EventType;
   },
 
   updateEvents: async (event: EventType): Promise<EventType> => {
@@ -67,7 +67,7 @@ const eventApi = {
         },
       }
     );
-    return data;
+    return data as EventType;
   },
 
   deleteEvents: async (id: number): Promise<void> => {

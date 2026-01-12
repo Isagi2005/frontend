@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardHeader, CardContent, Grid, Box, Typography } from "@mui/material";
+import { Card, CardHeader, CardContent, Box, Typography } from "@mui/material";
 import { User, Calendar, Home, MapPin, Phone, Mail } from "lucide-react";
 import type { StudentProfile } from "../../../api/studentApi";
 
@@ -9,16 +9,16 @@ interface EtudiantInfosProps {
 }
 
 const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
-  <Grid container spacing={3}>
-    <Grid item xs={12} md={6}>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="col-span-12 md:col-span-1">
       <Card variant="outlined" sx={{ height: "100%" }}>
         <CardHeader
           title="Informations personnelles"
           sx={{ bgcolor: "primary.light", color: "primary.contrastText", pb: 1 }}
         />
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+          <div className="grid grid-cols-1 gap-4">
+            <div className="col-span-12">
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <User size={20} color="#1976d2" />
                 <Typography variant="subtitle1" fontWeight="medium">
@@ -32,8 +32,8 @@ const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
                     : eleve.sexe || "-"}
                 </Typography>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
+            </div>
+            <div className="col-span-12">
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Calendar size={20} color="#1976d2" />
                 <Typography variant="subtitle1" fontWeight="medium">
@@ -43,8 +43,8 @@ const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
                   {formatDate(eleve.dateDeNaissance)} ({eleve.age} ans)
                 </Typography>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
+            </div>
+            <div className="col-span-12">
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Home size={20} color="#1976d2" />
                 <Typography variant="subtitle1" fontWeight="medium">
@@ -52,20 +52,20 @@ const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
                 </Typography>
                 <Typography>{eleve.religion || "-"}</Typography>
               </Box>
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </CardContent>
       </Card>
-    </Grid>
-    <Grid item xs={12} md={6}>
+    </div>
+    <div className="col-span-12 md:col-span-1">
       <Card variant="outlined" sx={{ height: "100%" }}>
         <CardHeader
           title="Coordonnées"
           sx={{ bgcolor: "primary.light", color: "primary.contrastText", pb: 1 }}
         />
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+          <div className="grid grid-cols-1 gap-4">
+            <div className="col-span-12">
               <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
                 <MapPin size={20} color="#1976d2" style={{ marginTop: 4 }} />
                 <Box>
@@ -75,8 +75,8 @@ const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
                   <Typography>{eleve.adresse || "-"}</Typography>
                 </Box>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
+            </div>
+            <div className="col-span-12">
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Phone size={20} color="#1976d2" />
                 <Typography variant="subtitle1" fontWeight="medium">
@@ -84,8 +84,8 @@ const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
                 </Typography>
                 <Typography>{eleve.telephone || "-"}</Typography>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
+            </div>
+            <div className="col-span-12">
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Mail size={20} color="#1976d2" />
                 <Typography variant="subtitle1" fontWeight="medium">
@@ -93,12 +93,12 @@ const EtudiantInfos: React.FC<EtudiantInfosProps> = ({ eleve, formatDate }) => (
                 </Typography>
                 <Typography>{eleve.email || "-"}</Typography>
               </Box>
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </CardContent>
       </Card>
-    </Grid>
-  </Grid>
+    </div>
+  </div>
 );
 
 export default EtudiantInfos;

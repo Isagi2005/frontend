@@ -1,14 +1,33 @@
 import type React from "react"
 import { useRef, useState, useEffect } from "react"
-import { PlusCircle, Edit, Trash2, X, Save, Mail, FileText, ImageIcon, Loader2, AlertTriangle } from "lucide-react"
+import { PlusCircle, Edit, Trash2, X, Mail, FileText, ImageIcon, Loader2, AlertTriangle, Save } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAddRecrutement, useDeleteRecrutement, useGetRecrutement, useUpdateRecrutement } from "../../hooks/useRecrutement"
 
+interface RecrutementItem {
+  id: number;
+  description: string;
+  email: string;
+  image?: string | null;
+}
+
+// Type pour les notifications du composant
+interface NotificationType {
+  message: string;
+  type: 'success' | 'error';
+  visible: boolean;
+}
+
 const RecrutementAdminPage = () => {
+  // Récupération des données avec typage
   const { data, isLoading } = useGetRecrutement()
+  const recrutementData: RecrutementItem[] = Array.isArray(data) ? data : []
   const addMutation = useAddRecrutement()
   const updateMutation = useUpdateRecrutement()
   const deleteMutation = useDeleteRecrutement()
+  
+  // Gestion des états de chargement
+  const isPending = addMutation.isPending || updateMutation.isPending;
 
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [currentImage, setCurrentImage] = useState<string | null>(null)
@@ -29,15 +48,23 @@ const RecrutementAdminPage = () => {
   // Prévisualisation de l'image sélectionnée
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    } else {
+    if (!file) {
       setPreviewImage(null)
+      return
     }
+    
+    // Vérification du type de fichier
+    if (!file.type.startsWith('image/')) {
+      showNotification('Veuillez sélectionner un fichier image valide', 'error')
+      if (imageRef.current) imageRef.current.value = ''
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setPreviewImage(reader.result as string)
+    }
+    reader.readAsDataURL(file)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -92,10 +119,12 @@ const RecrutementAdminPage = () => {
     setSelectedId(null)
     setCurrentImage(null)
     setPreviewImage(null)
-    e.currentTarget.reset()
+    if (e.currentTarget instanceof HTMLFormElement) {
+      e.currentTarget.reset()
+    }
   }
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: RecrutementItem) => {
     setSelectedId(item.id)
     setCurrentImage(item.image || null)
     if (descriptionRef.current) descriptionRef.current.value = item.description
@@ -119,23 +148,25 @@ const RecrutementAdminPage = () => {
 
   const handleDelete = (id: number) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette offre de recrutement ?")) {
-      deleteMutation.mutate(id)
-      showNotification("Offre supprimée avec succès", "success")
+      deleteMutation.mutate(id, {
+        onSuccess: () => {
+          showNotification("Offre supprimée avec succès", "success")
+        },
+        onError: () => {
+          showNotification("Erreur lors de la suppression de l'offre", "error")
+        }
+      })
     }
   }
 
   // Notification system
-  const [notification, setNotification] = useState<{
-    message: string
-    type: "success" | "error"
-    visible: boolean
-  }>({
+  const [notification, setNotification] = useState<NotificationType>({
     message: "",
     type: "success",
     visible: false,
   })
 
-  const showNotification = (message: string, type: "success" | "error") => {
+  const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({
       message,
       type,
@@ -148,7 +179,7 @@ const RecrutementAdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       {/* Notification */}
       <AnimatePresence>
         {notification.visible && (
@@ -186,7 +217,7 @@ const RecrutementAdminPage = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="bg-white rounded-xl shadow-xl overflow-hidden mb-10"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4">
+          <div className="bg-purple-600 p-4">
             <h2 className="text-xl font-semibold text-white flex items-center">
               {selectedId ? (
                 <>
@@ -204,7 +235,7 @@ const RecrutementAdminPage = () => {
 
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 flex items-center">
+              <label className="text-sm font-medium text-gray-700 flex items-center">
                 <FileText className="mr-2 h-4 w-4 text-indigo-500" />
                 Description de l'offre
               </label>
@@ -217,7 +248,7 @@ const RecrutementAdminPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 flex items-center">
+              <label className="text-sm font-medium text-gray-700 flex items-center">
                 <Mail className="mr-2 h-4 w-4 text-indigo-500" />
                 Email de contact
               </label>
@@ -231,7 +262,7 @@ const RecrutementAdminPage = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700 flex items-center">
+              <label className="text-sm font-medium text-gray-700 flex items-center">
                 <ImageIcon className="mr-2 h-4 w-4 text-indigo-500" />
                 Image de l'offre
               </label>
@@ -295,36 +326,33 @@ const RecrutementAdminPage = () => {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                type="submit"
-                className={`flex-1 flex items-center justify-center py-3 px-4 rounded-lg text-white font-medium shadow-md transition-all duration-200 ${
-                  selectedId
-                    ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
-                    : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                }`}
-                disabled={addMutation.isLoading || updateMutation.isLoading}
+                type="button"
+                onClick={handleCancel}
+                className="flex items-center justify-center py-3 px-6 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors duration-200"
               >
-                {addMutation.isLoading || updateMutation.isLoading ? (
+                <X className="h-5 w-5 mr-2" />
+                Annuler
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                disabled={isPending}
+                className={`flex items-center justify-center py-3 px-6 rounded-lg font-medium transition-colors duration-200 ${
+                  isPending
+                    ? 'bg-blue-400 cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                }`}
+              >
+                {isPending ? (
                   <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                 ) : selectedId ? (
                   <Save className="h-5 w-5 mr-2" />
                 ) : (
                   <PlusCircle className="h-5 w-5 mr-2" />
                 )}
-                {selectedId ? "Enregistrer les modifications" : "Ajouter l'offre"}
+                {selectedId ? 'Mettre à jour' : 'Ajouter'}
               </motion.button>
-
-              {selectedId && (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="button"
-                  onClick={handleCancel}
-                  className="flex items-center justify-center py-3 px-6 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors duration-200"
-                >
-                  <X className="h-5 w-5 mr-2" />
-                  Annuler
-                </motion.button>
-              )}
             </div>
           </form>
         </motion.div>
@@ -345,14 +373,14 @@ const RecrutementAdminPage = () => {
               <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
               <span className="ml-3 text-gray-600">Chargement des offres...</span>
             </div>
-          ) : data?.length === 0 ? (
+          ) : recrutementData.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-8 text-center">
               <p className="text-gray-500">Aucune offre de recrutement pour le moment</p>
             </div>
           ) : (
             <div className="space-y-6">
               <AnimatePresence>
-                {data?.map((item: any, index: number) => (
+                {recrutementData.map((item, index) => (
                   <motion.div
                     key={item.id}
                     initial={{ opacity: 0, y: 20 }}

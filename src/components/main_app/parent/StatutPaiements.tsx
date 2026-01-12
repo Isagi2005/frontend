@@ -1,18 +1,16 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Paper,
   Avatar,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  ListItemButton,
   LinearProgress,
   Skeleton,
   Chip,
@@ -43,17 +41,29 @@ const StatusPaiement = () => {
   const [selectedChild, setSelectedChild] = useState<number | null>(null)
 
   useEffect(() => {
-    setIsLoading(true)
-    api
-      .get("/api/statut_paiements/")
-      .then((res) => {
-        setData(res.data)
-        if (res.data.length > 0) {
-          setSelectedChild(res.data[0].enfant_id)
+    let isMounted = true
+
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const res = await api.get<StatutPaiement[]>("/api/statut_paiements/")
+        if (!isMounted) return
+        const payload = res.data as StatutPaiement[]
+        setData(payload)
+        if (payload.length > 0) {
+          setSelectedChild(payload[0].enfant_id)
         }
-      })
-      .catch((err) => console.error("Erreur:", err))
-      .finally(() => setIsLoading(false))
+      } catch (err) {
+        console.error("Erreur:", err)
+      } finally {
+        if (isMounted) setIsLoading(false)
+      }
+    }
+
+    fetchData()
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const formatCurrency = (amount: number) => {
@@ -62,12 +72,6 @@ const StatusPaiement = () => {
       currency: "MGA",
       minimumFractionDigits: 0,
     }).format(amount)
-  }
-
-  const getMonthColor = (isPaid: boolean) => {
-    return isPaid
-      ? "bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-sm"
-      : "bg-gradient-to-br from-rose-400 to-pink-500 text-white shadow-sm"
   }
 
   const container = {
@@ -80,7 +84,7 @@ const StatusPaiement = () => {
     },
   }
 
-  const item = {
+  const listItemVariants = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 },
   }
@@ -95,27 +99,27 @@ const StatusPaiement = () => {
           Statut des Paiements
         </Typography>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
+        <Box display="flex" flexWrap="wrap" gap={3}>
+          <Box flex="1 0 300px" maxWidth="md">
             <Skeleton variant="rectangular" height={400} />
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+          </Box>
+          <Box flex="1 0 600px" maxWidth="lg">
+            <Box display="flex" flexWrap="wrap" gap={3}>
+              <Box flex="1 0 250px" maxWidth="sm">
                 <Skeleton variant="rectangular" height={120} />
-              </Grid>
-              <Grid item xs={12} md={6}>
+              </Box>
+              <Box flex="1 0 250px" maxWidth="sm">
                 <Skeleton variant="rectangular" height={120} />
-              </Grid>
-              <Grid item xs={12}>
+              </Box>
+              <Box flex="1 1 100%">
                 <Skeleton variant="rectangular" height={200} />
-              </Grid>
-              <Grid item xs={12}>
+              </Box>
+              <Box flex="1 1 100%">
                 <Skeleton variant="rectangular" height={100} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Box>
     )
   }
@@ -127,9 +131,9 @@ const StatusPaiement = () => {
         Statut des Paiements
       </Typography>
 
-      <Grid container spacing={3}>
+      <Box display="flex" flexWrap="wrap" gap={3}>
         {/* Sidebar with student list */}
-        <Grid item xs={12} md={4}>
+        <Box flex="1 0 300px" maxWidth="md">
           <motion.div variants={container} initial="hidden" animate="show" className="h-full">
             <Card className="shadow-md h-full bg-white border-t-4 border-t-primary">
               <CardContent className="p-0">
@@ -139,32 +143,33 @@ const StatusPaiement = () => {
                   </Typography>
                 </Box>
                 <List className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto">
-                  {data.map((item) => (
-                    <motion.div key={item.enfant_id} variants={item}>
-                      <ListItem
-                        button
-                        onClick={() => setSelectedChild(item.enfant_id)}
-                        selected={selectedChild === item.enfant_id}
-                        className={`transition-all hover:bg-slate-50 ${
-                          selectedChild === item.enfant_id ? "bg-slate-100" : ""
-                        }`}
-                      >
-                        <ListItemAvatar>
-                          <Avatar className="bg-primary/10 text-primary">{item.nom_complet.charAt(0)}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={
-                            <Typography variant="body1" className="font-medium text-slate-800">
-                              {item.nom_complet}
-                            </Typography>
-                          }
-                          secondary={
-                            <Box className="flex items-center gap-1 text-slate-500">
-                              <SchoolIcon fontSize="small" className="text-primary" />
-                              {item.classe}
-                            </Box>
-                          }
-                        />
+                  {data.map((child) => (
+                    <motion.div key={child.enfant_id} variants={listItemVariants}>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          onClick={() => setSelectedChild(child.enfant_id)}
+                          selected={selectedChild === child.enfant_id}
+                          className={`transition-all hover:bg-slate-50 ${
+                            selectedChild === child.enfant_id ? "bg-slate-100" : ""
+                          }`}
+                        >
+                          <ListItemAvatar>
+                            <Avatar className="bg-primary/10 text-primary">{child.nom_complet.charAt(0)}</Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography variant="body1" className="font-medium text-slate-800">
+                                {child.nom_complet}
+                              </Typography>
+                            }
+                            secondary={
+                              <Box className="flex items-center gap-1 text-slate-500">
+                                <SchoolIcon fontSize="small" className="text-primary" />
+                                {child.classe}
+                              </Box>
+                            }
+                          />
+                        </ListItemButton>
                       </ListItem>
                     </motion.div>
                   ))}
@@ -172,14 +177,14 @@ const StatusPaiement = () => {
               </CardContent>
             </Card>
           </motion.div>
-        </Grid>
+        </Box>
 
         {/* Main content */}
-        <Grid item xs={12} md={8}>
+        <Box flex="1 0 600px" maxWidth="lg">
           {selectedChildData && (
-            <Grid container spacing={3}>
+            <Box display="flex" flexWrap="wrap" gap={3}>
               {/* Summary cards */}
-              <Grid item xs={12} md={6}>
+              <Box flex="1 0 250px" maxWidth="sm">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -207,9 +212,9 @@ const StatusPaiement = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} md={6}>
+              <Box flex="1 0 250px" maxWidth="sm">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -236,10 +241,10 @@ const StatusPaiement = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
-              </Grid>
+              </Box>
 
               {/* Payment status calendar */}
-              <Grid item xs={12}>
+              <Box flex="1 1 100%">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -255,9 +260,9 @@ const StatusPaiement = () => {
                       </Box>
 
                       <Box className="p-6">
-                        <Grid container spacing={2}>
+                        <Box display="flex" flexWrap="wrap" gap={2}>
                           {Object.entries(selectedChildData.statuts_paiement).map(([mois, status], idx) => (
-                            <Grid item xs={6} sm={4} md={2} key={mois}>
+                            <Box flex="1 0 150px" maxWidth="xs" key={mois}>
                               <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
@@ -277,17 +282,17 @@ const StatusPaiement = () => {
                                   </Box>
                                 </Paper>
                               </motion.div>
-                            </Grid>
+                            </Box>
                           ))}
-                        </Grid>
+                        </Box>
                       </Box>
                     </CardContent>
                   </Card>
                 </motion.div>
-              </Grid>
+              </Box>
 
               {/* Payment progress */}
-              <Grid item xs={12}>
+              <Box flex="1 1 100%">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -327,11 +332,11 @@ const StatusPaiement = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           )}
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   )
 }

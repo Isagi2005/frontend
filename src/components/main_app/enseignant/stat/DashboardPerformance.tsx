@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, Grid, Paper, Chip } from "@mui/material";
+import { Card, CardContent, Typography, Box, Paper } from "@mui/material";
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell } from "recharts";
 
 interface EvolutionMoyenne {
@@ -16,9 +16,9 @@ interface RepartitionNote {
 interface DashboardPerformanceData {
   evolution_moyenne?: EvolutionMoyenne[];
   repartition_notes?: RepartitionNote[];
-  meilleure_moyenne?: number;
-  moyenne_generale?: number;
-  moyenne_min?: number;
+  meilleure_moyenne?: number | null;
+  moyenne_generale?: number | null;
+  moyenne_min?: number | null;
 }
 
 interface DashboardPerformanceProps {
@@ -27,9 +27,9 @@ interface DashboardPerformanceProps {
 
 const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardData }) => {
   return (
-    <Grid container spacing={3}>
+    <Box display="flex" flexWrap="wrap" gap={3}>
       {/* Graphique d'évolution de la moyenne */}
-      <Grid item xs={12} md={8}>
+      <Box flex="1 0 66.66%" maxWidth="md">
         <Card sx={{ height: "100%" }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -60,10 +60,10 @@ const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardDa
             </Box>
           </CardContent>
         </Card>
-      </Grid>
+      </Box>
 
       {/* Répartition des notes */}
-      <Grid item xs={12} md={4}>
+      <Box flex="1 0 33.33%" maxWidth="sm">
         <Card sx={{ height: "100%" }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -81,7 +81,7 @@ const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardDa
                   <YAxis dataKey="range" type="category" />
                   <Tooltip />
                   <Bar dataKey="count" name="Nombre d'élèves">
-                    {(dashboardData?.repartition_notes ?? []).map((entry: any, index: number) => (
+                    {(dashboardData?.repartition_notes ?? []).map((entry: RepartitionNote, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Bar>
@@ -90,18 +90,18 @@ const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardDa
             </Box>
           </CardContent>
         </Card>
-      </Grid>
+      </Box>
 
       {/* Statistiques détaillées */}
-      <Grid item xs={12} md={6}>
+      <Box flex="1 0 50%" maxWidth="sm">
         <Card sx={{ height: "100%" }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               Statistiques détaillées
             </Typography>
             <Box sx={{ p: 2 }}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
+              <Box display="flex" flexWrap="wrap" gap={3}>
+                <Box flex="1 0 100%" sx={{ sm: { flex: '1 0 50%' } }}>
                   <Paper elevation={0} sx={{ p: 2, bgcolor: "background.default", borderRadius: 2, textAlign: "center" }}>
                     <Typography variant="subtitle2" color="text.secondary">
                       Meilleure moyenne
@@ -111,8 +111,8 @@ const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardDa
                     </Typography>
                     
                   </Paper>
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                </Box>
+                <Box flex="1 0 100%" sx={{ sm: { flex: '1 0 50%' } }}>
                   <Paper elevation={0} sx={{ p: 2, bgcolor: "background.default", borderRadius: 2, textAlign: "center" }}>
                     <Typography variant="subtitle2" color="text.secondary">
                       Moyenne générale
@@ -122,8 +122,8 @@ const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardDa
                     </Typography>
                     
                   </Paper>
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                </Box>
+                <Box flex="1 0 100%" sx={{ sm: { flex: '1 0 50%' } }}>
                   <Paper elevation={0} sx={{ p: 2, bgcolor: "background.default", borderRadius: 2, textAlign: "center" }}>
                     <Typography variant="subtitle2" color="text.secondary">
                       Moyenne minimale
@@ -132,13 +132,13 @@ const DashboardPerformance: React.FC<DashboardPerformanceProps> = ({ dashboardDa
                       {dashboardData?.moyenne_min?.toFixed(1) ?? "--"}
                     </Typography>
                   </Paper>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

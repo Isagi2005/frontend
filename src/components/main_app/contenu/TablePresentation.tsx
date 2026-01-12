@@ -23,12 +23,12 @@ const TableEvent = ({ displayedData }: ClassProps) => {
   const navigate = useNavigate();
   const [editId, setEditId] = useState<string | null>(null);
   const [showPage, setShowPage] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
   const deleteMutation = useDeletePresentation();
   const updateMutation = useUpdatePresentation();
-  const [previewImage, setPreviewImage] = useState<string | null>();
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const { register, handleSubmit, reset, setValue } =
     useForm<PresentationType>();
 
@@ -44,7 +44,7 @@ const TableEvent = ({ displayedData }: ClassProps) => {
     }
   };
 
-  const openModal = (id: string) => {
+  const openModal = (id: number) => {
     setSelectedId(id);
     setIsOpen(true);
   };
@@ -247,7 +247,7 @@ const TableEvent = ({ displayedData }: ClassProps) => {
                               />
                             ) : (
                               <img
-                                src={presentation.image || "/placeholder.svg"}
+                                src={typeof presentation.image === 'string' ? presentation.image : "/placeholder.svg"}
                                 alt="profil"
                                 className="h-16 object-cover"
                               />
@@ -376,7 +376,7 @@ const TableEvent = ({ displayedData }: ClassProps) => {
                             {presentation.image ? (
                               <img
                                 className="h-16 w-16 object-cover rounded shadow-sm border border-gray-200"
-                                src={`${presentation.image}`}
+                                src={typeof presentation.image === 'string' ? presentation.image : URL.createObjectURL(presentation.image)}
                                 alt={presentation.titrePresentation}
                               />
                             ) : (
@@ -407,7 +407,7 @@ const TableEvent = ({ displayedData }: ClassProps) => {
                               <Edit size={18} />
                             </button>
                             <button
-                              onClick={() => openModal(presentation.id)}
+                              onClick={() => openModal(Number(presentation.id))}
                               className="p-1.5 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-colors"
                               title="Supprimer"
                             >

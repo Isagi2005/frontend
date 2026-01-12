@@ -13,7 +13,7 @@ const UserSearchList: React.FC<Props> = ({ onUserSelect, excludeIds = [] }) => {
 
   const filtered = (users || []).filter(
     (u) =>
-      !excludeIds.includes(u.id) &&
+      u.id !== undefined && !excludeIds.includes(u.id) &&
       (u.first_name?.toLowerCase().includes(search.toLowerCase()) ||
         u.last_name?.toLowerCase().includes(search.toLowerCase()) ||
         u.username?.toLowerCase().includes(search.toLowerCase()))

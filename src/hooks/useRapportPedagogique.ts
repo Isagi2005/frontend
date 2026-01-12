@@ -24,7 +24,7 @@ export const useAddRapport = () => {
     mutationKey: ["rapport-pedagogique"],
     mutationFn: rapportPedagogiqueApi.add,
     onSuccess: () => {
-      queryClient.invalidateQueries(["rapport-pedagogique"]);
+      queryClient.invalidateQueries({ queryKey: ["rapport-pedagogique"] });
     },
   });
 };
@@ -35,7 +35,7 @@ export const useUpdateRapport = () => {
     mutationKey: ["rapport-pedagogique"],
     mutationFn: rapportPedagogiqueApi.update,
     onSuccess: () => {
-      queryClient.invalidateQueries(["rapport-pedagogique"]);
+      queryClient.invalidateQueries({ queryKey: ["rapport-pedagogique"] });
     },
   });
 };
@@ -46,7 +46,7 @@ export const useDeleteRapport = () => {
     mutationKey: ["rapport-pedagogique"],
     mutationFn: rapportPedagogiqueApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries(["rapport-pedagogique"]);
+      queryClient.invalidateQueries({ queryKey: ["rapport-pedagogique"] });
     },
   });
 };
@@ -56,7 +56,7 @@ export const useMarkRapportAsReadDirection = () => {
   return useMutation({
     mutationFn: ({ id, lu }: { id: number; lu: boolean }) => rapportPedagogiqueApi.markAsRead(id, lu),
     onSuccess: () => {
-      queryClient.invalidateQueries(["rapport-pedagogique-direction"]);
+      queryClient.invalidateQueries({ queryKey: ["rapport-pedagogique"] });
     },
   });
 };

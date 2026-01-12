@@ -65,10 +65,10 @@ export function exportBulletinPDF(bulletin: BulletinPDFType): void {
 
   // Affichage des heures de retard et d'absence juste après le tableau
   // y est déjà positionné après le tableau
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.setTextColor(251, 191, 36); // jaune pour le retard
   doc.text("Retard total :", 14, y);
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   // Récupération des totaux depuis l'API (nouveaux champs backend ou fallback)
   // Affichage compatible snake_case et camelCase
   const retardVal = typeof bulletin.total_heures_retard === 'number'
@@ -77,10 +77,10 @@ export function exportBulletinPDF(bulletin: BulletinPDFType): void {
   const retardStr = retardVal < 1 ? `${Math.round(retardVal * 60)} min` : `${retardVal.toFixed(2)} h`;
   doc.text(retardStr, 44, y);
 
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.setTextColor(96, 165, 250); // bleu pour l'absence
   doc.text("Absence totale :", 70, y);
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   const absenceVal = typeof bulletin.total_heures_absence === 'number'
     ? bulletin.total_heures_absence
     : (typeof bulletin.totalHeuresAbsence === 'number' ? bulletin.totalHeuresAbsence : 0);
@@ -88,31 +88,31 @@ export function exportBulletinPDF(bulletin: BulletinPDFType): void {
   doc.text(absenceStr, 110, y);
   doc.setTextColor(0, 0, 0); // reset couleur
 
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text("Moyenne générale :", 140, y);
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   doc.text(String(bulletin.moyenneGenerale ?? ''), 180, y);
   y += 8;
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text("Appréciation générale :", 14, y);
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   doc.text(String(bulletin.appreciationGenerale ?? ''), 60, y);
   y += 8;
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text("Points forts :", 14, y);
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   doc.text(String(bulletin.pointsForts ?? ''), 45, y);
   y += 8;
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text("Besoins :", 14, y);
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   doc.text(String(bulletin.besoins ?? ''), 38, y);
 
   
 
   // Signatures
   y += 14;
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.text('Signature du parent', 25, y);
   doc.text('Signature de l\'enseignant', 90, y);

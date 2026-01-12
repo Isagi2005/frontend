@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardContent, Typography, Box, Avatar } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import { Users, Award, TrendingUp, AlertTriangle } from "lucide-react";
 
 interface DashboardStatsCardsProps {
@@ -21,8 +20,8 @@ const DashboardStatsCards: React.FC<DashboardStatsCardsProps> = ({
   showMoyenneError = false,
 }) => {
   return (
-    <Grid container spacing={3} sx={{ mb: 4 }}>
-      <Grid item xs={12} sm={6} md={3}>
+    <Box display="flex" flexWrap="wrap" gap={3} sx={{ mb: 4 }}>
+      <Box flex="1 1 calc(25% - 24px)" minWidth={0}>
         <Card sx={{ background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)", color: "white", borderRadius: 2 }}>
           <CardContent>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -43,8 +42,8 @@ const DashboardStatsCards: React.FC<DashboardStatsCardsProps> = ({
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
+      </Box>
+      <Box flex="1 1 calc(25% - 24px)" minWidth={0}>
         <Card sx={{ background: "linear-gradient(45deg, #4caf50 30%, #8bc34a 90%)", color: "white", borderRadius: 2 }}>
           <CardContent>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -71,8 +70,8 @@ const DashboardStatsCards: React.FC<DashboardStatsCardsProps> = ({
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
+      </Box>
+      <Box flex="1 1 calc(25% - 24px)" minWidth={0}>
         <Card sx={{ background: "linear-gradient(45deg, #ff9800 30%, #ffb74d 90%)", color: "white", borderRadius: 2 }}>
           <CardContent>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -93,8 +92,8 @@ const DashboardStatsCards: React.FC<DashboardStatsCardsProps> = ({
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
+      </Box>
+      <Box flex="1 1 calc(25% - 24px)" minWidth={0}>
         <Card sx={{ background: "linear-gradient(45deg, #f44336 30%, #ff7043 90%)", color: "white", borderRadius: 2 }}>
           <CardContent>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -115,8 +114,8 @@ const DashboardStatsCards: React.FC<DashboardStatsCardsProps> = ({
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

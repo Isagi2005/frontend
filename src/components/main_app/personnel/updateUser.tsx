@@ -5,36 +5,66 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import type { User, UserProfile, UserRole } from "../../../api/userApi"
-import { GetUser, UseRetrieve, UseUpdateProfile, useUpdateUser } from "../../../hooks/useUser"
+import type { User, UserRole } from "../../../api/userApi"
+
+// Type pour le formulaire qui correspond au schéma Yup
+// Type pour le formulaire qui correspond au schéma Yup
+type UserFormData = {
+  id?: number;
+  username: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  dateArrivee: string;
+  is_active: boolean;
+  status: "active" | "inactive"; // Doit correspondre aux valeurs attendues par le schéma
+  profile: {
+    id?: number;
+    image: File | string | null;
+    sexe?: string;
+    telephone?: string;
+    birthDate?: string;
+    adresse?: string;
+    religion?: string;
+    role: UserRole;
+  };
+};
+import { GetUser, UseRetrieve, useUpdateUser } from "../../../hooks/useUser"
 import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import Loading from "../../Loading"
 import { UserIcon, Mail, Phone, Calendar, MapPin, Book, Lock, Upload, Save } from "lucide-react"
 
 // Schéma de validation
-const schema = yup.object().shape({
-  username: yup.string(),
-  first_name: yup.string().required("Le champ nom est obligatoire"),
-  last_name: yup.string(),
+// Création d'un schéma Yup qui correspond à UserFormData
+const schema = yup.object({
+  username: yup.string().required("Le nom d'utilisateur est obligatoire"),
+  password: yup.string().required("Le mot de passe est obligatoire"),
+  first_name: yup.string().required("Le prénom est obligatoire"),
+  last_name: yup.string().required("Le nom est obligatoire"),
   email: yup.string().email("Email invalide").required("L'email est requis"),
-  profile: yup.object().shape({
-    sexe: yup.string(),
-    telephone: yup.string(),
-    birthDate: yup.string(),
-    adresse: yup.string(),
-    religion: yup.string(),
-    role: yup.mixed<UserRole>().oneOf(["direction", "enseignant", "parent", "finance"]).required(),
+  dateArrivee: yup.string().required("La date d'arrivée est requise"),
+  is_active: yup.boolean().required("Le statut actif est requis"),
+  status: yup.string().oneOf(["active", "inactive"]).required("Le statut est requis"),
+  profile: yup.object({
+    id: yup.number().optional(),
+    image: yup.mixed().nullable(),
+    sexe: yup.string().optional(),
+    telephone: yup.string().optional(),
+    birthDate: yup.string().optional(),
+    adresse: yup.string().optional(),
+    religion: yup.string().optional(),
+    role: yup.mixed<UserRole>().oneOf(["direction", "enseignant", "parent", "finance"]).required("Le rôle est requis"),
   }),
-})
+}) as yup.ObjectSchema<UserFormData>;
 
 const UserForm = () => {
   const navigate = useNavigate()
 
   const updateMutation = useUpdateUser()
-  const Mutation = UseUpdateProfile()
   const { id } = useParams<{ id: string }>()
-  const { data: user, isLoading: load } = UseRetrieve(id)
+  const { data: user, isLoading: load } = UseRetrieve(id || '')
   const { data: authentified } = GetUser()
   const {
     register,
@@ -42,8 +72,14 @@ const UserForm = () => {
     formState: { errors },
     setValue,
     reset,
-  } = useForm<User>({
-    defaultValues: user,
+  } = useForm<UserFormData>({
+    defaultValues: user ? {
+      ...user,
+      profile: {
+        ...user.profile,
+        image: user.profile.image || null
+      }
+    } : {},
     resolver: yupResolver(schema),
   })
 
@@ -69,34 +105,31 @@ const UserForm = () => {
     }
   }
 
-  const onSubmitHandler = (data: User) => {
-    const profile: UserProfile = {
-      id: data.profile.id,
-      image: data.profile.image,
-      sexe: data.profile.sexe,
-      telephone: data.profile.telephone,
-      birthDate: data.profile.birthDate,
-      adresse: data.profile.adresse,
-      religion: data.profile.religion,
-      role: data.profile.role,
-    }
-    Mutation.mutate(profile, {
+  const onSubmitHandler = (data: UserFormData) => {
+    // Créer un nouvel objet utilisateur avec les données du formulaire
+    const userData = {
+      ...data,
+      profile: {
+        ...data.profile,
+        // S'assure que l'image est du bon type avant de l'envoyer
+        image: data.profile.image instanceof File || 
+              typeof data.profile.image === 'string' ? 
+              data.profile.image : 
+              null
+      }
+    } as unknown as User; // Double assertion de type pour éviter les erreurs de compatibilité
+    
+    // Mettre à jour le profil utilisateur
+    updateMutation.mutate(userData, {
       onSuccess: () => {
-        updateMutation.mutate(data, {
-          onSuccess: () => {
-            toast.success("Modification réussie !")
-            navigate("/home/personnel/user")
-          },
-          onError: () => {
-            toast.error("Erreur lors de la modification !")
-          },
-        })
+        toast.success("Modification réussie !")
+        navigate("/home/personnel/user")
       },
       onError: () => {
         toast.error("Erreur lors de la modification !")
       },
-    })
-  }
+    });
+  };
 
   if (load) {
     return (
@@ -112,10 +145,10 @@ const UserForm = () => {
 
       <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-8">
         <div className="hidden">
-          <input type="text" hidden {...register("id")} />
-          <input type="text" hidden {...register("profile.id")} />
-          <input hidden type="text" {...register("username")} />
-        </div>
+        <input type="hidden" {...register("id")} />
+        <input type="hidden" {...register("profile.id")} />
+        <input type="hidden" {...register("username")} />
+      </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Colonne gauche */}
@@ -244,13 +277,13 @@ const UserForm = () => {
                     <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
                       {previewImage ? (
                         <img
-                          src={previewImage || "/placeholder.svg"}
+                          src={previewImage}
                           alt="Preview"
                           className="h-full w-full object-cover"
                         />
                       ) : user?.profile?.image ? (
                         <img
-                          src={user.profile.image || "/placeholder.svg"}
+                          src={typeof user.profile.image === 'string' ? user.profile.image : "/placeholder.svg"}
                           alt="profil"
                           className="h-full w-full object-cover"
                         />

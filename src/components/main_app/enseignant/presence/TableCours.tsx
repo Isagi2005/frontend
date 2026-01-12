@@ -15,18 +15,19 @@ interface coursProps {
 const TableCours = ({ displayedData }: coursProps) => {
 
   const [editId, setEditId] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [ismodalOpen, setOpenModal] = useState(false);
   const [presence, setPresence] = useState(false);
   const [cours, setCoursId] = useState<coursProfile | null>(null);
   const deleteMutation = useDeleteCours();
   const updateMutation = useUpdateCours();
-  const { register, handleSubmit, reset, setValue, control } =
+  const { register, handleSubmit, reset, setValue } =
     useForm<coursProfile>();
 
   const openModal = (id: string) => {
-    setSelectedId(id);
+    const idNum = parseInt(id, 10);
+    setSelectedId(idNum);
     setIsOpen(true);
   };
   const openList = (cour: coursProfile) => {
@@ -82,14 +83,14 @@ const TableCours = ({ displayedData }: coursProps) => {
           mutation={deleteMutation}
         />
       )}
-      {ismodalOpen && (
+      {ismodalOpen && cours && (
         <PresenceModal
           showPage={ismodalOpen}
           setShowPage={setOpenModal}
           cour={cours}
         />
       )}
-      {presence && (
+      {presence && cours && (
         <ListPresenceModal
           showPage={presence}
           setShowPage={setPresence}

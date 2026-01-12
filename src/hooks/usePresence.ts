@@ -81,7 +81,7 @@ export const useUpdateCours = () => {
     mutationKey: ["coursUpdate"],
     mutationFn: presenceApi.updateCours,
     onSuccess: () => {
-      queryClient.invalidateQueries(["coursUpdate"] );
+      queryClient.invalidateQueries({ queryKey: ["coursUpdate"] });
     },
   });
 };
@@ -92,7 +92,7 @@ export const useUpdatePres = () => {
     mutationKey: ["presence"],
     mutationFn: presenceApi.updatePresEtudiant,
     onSuccess: () => {
-      queryClient.invalidateQueries(["presence"] );
+      queryClient.invalidateQueries({ queryKey: ["coursUpdate"] });
     },
   });
 };
@@ -104,7 +104,7 @@ export const useDeleteCours = () => {
     mutationKey: ["coursDelete"],
     mutationFn: presenceApi.deleteCours,
     onSuccess: () => {
-      queryClient.invalidateQueries(["coursDelete"]);
+      queryClient.invalidateQueries({queryKey: ["coursDelete"]});
     },
   });
 };
@@ -115,7 +115,7 @@ export const useDeleteInscription = () => {
     mutationKey: ["inscription"],
     mutationFn: presenceApi.deleteInscription,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["inscription"] );
+      queryClient.invalidateQueries({queryKey: ["inscription"] });
     },
   });
 };

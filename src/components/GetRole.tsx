@@ -14,7 +14,7 @@ const RedirectToDashboard = () => {
     case "parent":
       return <Navigate to="dashboardP" />;
     default:
-      return <Navigate to="/not_found" />;
+      return <Navigate to="/unauthorized" />;
   }
 };
 

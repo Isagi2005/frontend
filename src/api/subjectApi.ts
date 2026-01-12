@@ -10,7 +10,11 @@ export interface SubjectProfile {
 const prepareFormData = (matiere: SubjectProfile): FormData => {
   const formData = new FormData();
   formData.append("titre", matiere.titre);
-  formData.append("enseignant", matiere.enseignant);
+  if (typeof matiere.enseignant === 'string') {
+    formData.append("enseignant", matiere.enseignant);
+  } else {
+    formData.append("enseignant", JSON.stringify(matiere.enseignant));
+  }
 
   return formData;
 };
@@ -18,7 +22,7 @@ const prepareFormData = (matiere: SubjectProfile): FormData => {
 const subjectApi = {
   get: async (): Promise<SubjectProfile[]> => {
     const { data } = await api.get("api/matiere/");
-    return data;
+    return data as SubjectProfile[];
   },
 
   getGenerics: async (
@@ -26,21 +30,21 @@ const subjectApi = {
     value: string
   ): Promise<SubjectProfile[]> => {
     const { data } = await api.get(`api/matiere/?${name}=${value}`);
-    return data;
+    return data as SubjectProfile[];
   },
   retrieve: async (id: string): Promise<SubjectProfile> => {
     const { data } = await api.get(`api/matiere/${id}/`);
-    return data;
+    return data as SubjectProfile;
   },
   add: async (subject: SubjectProfile): Promise<SubjectProfile> => {
     const formData = prepareFormData(subject);
     const { data } = await api.post("api/matiere/", formData);
-    return data;
+    return data as SubjectProfile;
   },
   update: async (subject: SubjectProfile): Promise<SubjectProfile> => {
     const formData = prepareFormData(subject);
     const { data } = await api.put(`/api/matiere/${subject.id}`, formData);
-    return data;
+    return data as SubjectProfile;
   },
   delete: async (id: number): Promise<void> => {
     await api.delete(`/api/matiere/${id}`);

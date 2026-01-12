@@ -20,7 +20,7 @@ const PresenceRow = ({ etudiant, cours }: Props) => {
       statut: "P",
     },
   })
-  const { mutate, isLoading } = useAddPresEtudiant()
+  const { mutate, isPending } = useAddPresEtudiant()
   const [showHeureA, setShowHeureA] = useState(false)
   const [showRaison, setShowRaison] = useState(false)
 
@@ -83,7 +83,7 @@ const PresenceRow = ({ etudiant, cours }: Props) => {
             {...register("statut", { required: true })}
             onChange={(e) => {
               handleStatusChange(e.target.value)
-              setValue("statut", e.target.value)
+              setValue("statut", e.target.value as "P" | "A" | "R")
             }}
             size="small"
           >
@@ -121,10 +121,10 @@ const PresenceRow = ({ etudiant, cours }: Props) => {
           color="primary"
           size="small"
           onClick={handleSubmit(onSubmit)}
-          disabled={isLoading}
-          startIcon={isLoading ? <CircularProgress size={16} /> : <Check size={16} />}
+          disabled={isPending}
+          startIcon={isPending ? <CircularProgress size={16} /> : <Check size={16} />}
         >
-          {isLoading ? "Envoi..." : "Valider"}
+          {isPending ? "Envoi..." : "Valider"}
         </Button>
       </TableCell>
     </TableRow>

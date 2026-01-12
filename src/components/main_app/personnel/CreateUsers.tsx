@@ -11,31 +11,38 @@ import { useAddProfile, useAddUser } from "../../../hooks/useUser"
 import BackButton from "../../Button"
 import { UserIcon, Mail, Phone, Calendar, MapPin, Book, Lock, Upload, Save, UserPlus } from "lucide-react"
 
-const schema = yup.object().shape({
+// Définition du schéma de validation
+const userSchema = yup.object().shape({
+  username: yup.string().required("Le nom d'utilisateur est requis"),
+  email: yup.string().email("Email invalide").required("L'email est requis"),
+  password: yup.string().min(6, "Le mot de passe doit contenir au moins 6 caractères").required("Le mot de passe est requis"),
   first_name: yup.string(),
   last_name: yup.string(),
-  email: yup.string().email("Email invalide").required("L'email est requis"),
   profile: yup.object().shape({
     sexe: yup.string(),
     telephone: yup.string(),
     birthDate: yup.string(),
     adresse: yup.string(),
     religion: yup.string(),
-    role: yup.mixed<UserRole>().oneOf(["direction", "enseignant", "parent", "finance"]).required(),
+    role: yup.mixed<UserRole>().oneOf(["direction", "enseignant", "parent", "finance"]).required("Le rôle est requis"),
+    image: yup.mixed(), // Ajout du champ image
   }),
 })
 
 const CreateUser = () => {
   const addUser = useAddUser()
   const addProfile = useAddProfile()
+  type UserFormData = yup.InferType<typeof userSchema>;
+  
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    getValues,
     reset,
-  } = useForm<User>({
-    resolver: yupResolver(schema),
+  } = useForm<UserFormData>({
+    resolver: yupResolver(userSchema),
     defaultValues: {
       profile: {
         role: "enseignant",
@@ -48,7 +55,13 @@ const CreateUser = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      setValue("profile.image", file)
+      
+      // Mettre à jour l'objet profile complet avec l'image
+      const currentProfile = getValues("profile") || {};
+      setValue("profile", {
+        ...currentProfile,
+        image: file
+      });
 
       // Créer une preview de l'image
       const reader = new FileReader()
@@ -59,39 +72,46 @@ const CreateUser = () => {
     }
   }
 
-  const onSubmitHandler = (data: User) => {
-    setValue("username", "temp")
-    addUser.mutate(data, {
-      onSuccess: (donnee) => {
-        const profile: UserProfile = {
-          account: donnee.id,
-          image: data.profile.image,
-          sexe: data.profile.sexe,
-          telephone: data.profile.telephone,
-          birthDate: data.profile.birthDate,
-          adresse: data.profile.adresse,
-          religion: data.profile.religion,
-          role: data.profile.role,
-        }
-        console.log(profile)
-        addProfile.mutate(profile, {
-          onSuccess: () => {
-            toast.success("Nouvel utilisateur créé avec succès !")
-            reset()
-            setPreviewImage(null)
-          },
-          onError: (err) => {
-            toast.error("Erreur lors de la création du profil !")
-            console.log(err)
-          },
-        })
-      },
-      onError: (err) => {
-        toast.error("Erreur lors de la création de l'utilisateur !")
-        console.log(err)
-      },
-    })
-  }
+  const onSubmitHandler = async (data: UserFormData) => {
+    try {
+      // Création de l'utilisateur avec les champs requis
+      const userData: User = {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        is_active: true,
+        status: "active",
+        dateArrivee: new Date().toISOString(),
+        // On envoie un profil minimal pour satisfaire le type User côté API
+        profile: {
+          ...(data.profile || {}),
+          image: data.profile?.image ?? null,
+        } as UserProfile,
+      };
+
+      // Appel des mutations
+      const user = await addUser.mutateAsync(userData);
+
+      // Création du profil utilisateur lié si nécessaire
+      if (data.profile) {
+        const profileData: UserProfile = {
+          ...data.profile,
+          image: data.profile.image ?? null,
+          account: String(user.id),
+        };
+
+        await addProfile.mutateAsync(profileData);
+      }
+
+      toast.success("Utilisateur créé avec succès");
+      reset();
+    } catch (error) {
+      console.error("Erreur lors de la création de l'utilisateur:", error);
+      toast.error("Une erreur est survenue lors de la création de l'utilisateur");
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 max-w-6xl mx-auto">
@@ -100,6 +120,7 @@ const CreateUser = () => {
           <UserPlus className="mr-2 h-6 w-6 text-blue-600" />
           Créer un nouvel utilisateur
         </h2>
+        <BackButton to="/home/personnel" />
       </div>
 
       <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-8">
@@ -229,9 +250,14 @@ const CreateUser = () => {
                     <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
                       {previewImage ? (
                         <img
-                          src={previewImage || "/placeholder.svg"}
+                          src={previewImage}
                           alt="Preview"
                           className="h-full w-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '';
+                            target.alt = 'Image non disponible';
+                          }}
                         />
                       ) : (
                         <UserIcon className="h-12 w-12 text-gray-400" />

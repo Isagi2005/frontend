@@ -41,7 +41,7 @@ export const useAddClass = () => {
     mutationKey: ["classe"],
     mutationFn: classApi.add,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["classe"] );
+      queryClient.invalidateQueries( {queryKey:["classe"]} );
     },
   });
 };
@@ -52,7 +52,7 @@ export const useUpdateClass = () => {
     mutationKey: ["classe"],
     mutationFn: classApi.update,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["classe"] );
+      queryClient.invalidateQueries( {queryKey:["classe"]} );
     },
   });
 };
@@ -63,7 +63,7 @@ export const useDeleteClass = () => {
     mutationKey: ["classe"],
     mutationFn: classApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries(["classe"] );
+      queryClient.invalidateQueries( {queryKey:["classe"]} );
     },
   });
 };

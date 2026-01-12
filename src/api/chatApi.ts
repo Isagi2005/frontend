@@ -42,12 +42,11 @@ export type SendMessagePayload = {
 const chatApi = {
   // Quitter un groupe
   leaveGroup(groupId: number): Promise<{success: boolean; deleted: boolean}> {
-    return api.post(`/api/users/conversations/${groupId}/leave_group/`).then((res) => res.data);
+    return api.post(`/api/users/conversations/${groupId}/leave_group/`) as Promise<{success: boolean; deleted: boolean}>;
   },
   // Récupérer tous les messages d'une conversation
   getMessages(conversationId: number, conversationType: 'private' | 'group'): Promise<Message[]> {
-    return api.get(`/api/users/messages/?conversation_id=${conversationId}&conversation_type=${conversationType}`)
-      .then((response) => response.data);
+    return api.get(`/api/users/messages/?conversation_id=${conversationId}&conversation_type=${conversationType}`) as Promise<Message[]>;
   },
 
   // Envoyer un message texte ou fichier
@@ -60,23 +59,23 @@ const chatApi = {
     if (image) formData.append("image", image);
     return api.post(`/api/users/messages/`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
-    }).then((response) => response.data);
+    }) as Promise<Message>;
   },
 
   // Marquer un message comme lu
   markAsRead(messageId: number): Promise<void> {
-    return api.post(`/api/users/messages/${messageId}/mark_as_read/`).then((response) => response.data);
+    return api.post(`/api/users/messages/${messageId}/mark_as_read/`) as Promise<void>;
   },
 
   // Supprimer un message
   deleteMessage(messageId: number): Promise<void> {
-    return api.delete(`/api/users/messages/${messageId}/`).then((response) => response.data);
+    return api.delete(`/api/users/messages/${messageId}/`) as Promise<void>;
   },
 
   // Utilitaires WebSocket
   getWebSocketUrl(conversationId: number, conversationType: 'private' | 'group'): string {
-    let protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    let host = window.location.hostname;
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const host = window.location.hostname;
     let port = '';
 
     if (process.env.NODE_ENV === "development") {
@@ -91,32 +90,32 @@ const chatApi = {
 
   // Récupérer toutes les conversations de l'utilisateur
   getConversations(): Promise<ConversationDetail[]> {
-    return api.get('/api/users/chats/').then((response) => response.data);
+    return api.get('/api/users/chats/') as Promise<ConversationDetail[]>;
   },
 
   // Créer une conversation privée ou de groupe
   createConversation(payload: CreateConversationPayload): Promise<ConversationDetail> {
-    return api.post('/api/users/chats/', payload).then((response) => response.data);
+    return api.post('/api/users/chats/', payload) as Promise<ConversationDetail>;
   },
 
   // Supprimer une conversation
   deleteConversation(conversationId: number, conversationType: 'private' | 'group'): Promise<void> {
-    return api.delete(`/api/users/chats/${conversationId}/?type=${conversationType}`).then((response) => response.data);
+    return api.delete(`/api/users/chats/${conversationId}/?type=${conversationType}`) as Promise<void>;
   },
 
   // Supprimer un groupe
   deleteGroup(groupId: number): Promise<void> {
-    return api.delete(`/api/users/chats/${groupId}/?type=group`).then((response) => response.data);
+    return api.delete(`/api/users/chats/${groupId}/?type=group`) as Promise<void>;
   },
 
   // Récupérer les groupes
   getGroups(): Promise<ConversationDetail[]> {
-    return api.get('/api/users/chats/?type=group').then((response) => response.data);
+    return api.get('/api/users/chats/?type=group') as Promise<ConversationDetail[]>;
   },
 
   // Récupérer les discussions privées
   getPrivateChats(): Promise<ConversationDetail[]> {
-    return api.get('/api/users/chats/?type=private').then((response) => response.data);
+    return api.get('/api/users/chats/?type=private') as Promise<ConversationDetail[]>;
   },
 };
 

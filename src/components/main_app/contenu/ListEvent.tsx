@@ -67,7 +67,7 @@ const ListEvent = () => {
           </button>
         </div>
       </div>
-      {load ? <Loading /> : <TableEvent displayedData={displayedData} />}
+      {load ? <Loading /> : <TableEvent displayedData={displayedData || []} />}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

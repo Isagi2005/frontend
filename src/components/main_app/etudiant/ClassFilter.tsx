@@ -2,7 +2,7 @@ import { ClassProfile } from "../../../api/classApi";
 import { filterProps } from "../../../dataMenu/filterItem";
 
 interface Props {
-  listClasse: ClassProfile[] | filterProps[];
+  listClasse: ClassProfile[] | filterProps[] | undefined;
   selectedClass: string;
   setSelectedClass: React.Dispatch<React.SetStateAction<string>>;
 }

@@ -17,22 +17,28 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const nav = useNavigate();
   const [openSubMenu, setOpenSubMenu] = useState<number | null>(null);
 
-  const role = localStorage.getItem("role");
+  const role = localStorage.getItem("role") || '';
+  
+  type RoleType = 'direction' | 'finance' | 'enseignant' | 'parent';
+  
   const selectRole = (roleChoice: string) => {
-    switch (roleChoice) {
-      case "direction":
-        return directionItem;
-      case "finance":
-        return financeItem;
-      case "enseignant":
-        return enseignantItem;
-      case "parent":
-        return parentItem;
-      default:
-        return null;
-    }
+    const validRole = ['direction', 'finance', 'enseignant', 'parent'].includes(roleChoice) 
+      ? roleChoice as RoleType 
+      : null;
+      
+    if (!validRole) return null;
+    
+    const roleMap = {
+      'direction': directionItem,
+      'finance': financeItem,
+      'enseignant': enseignantItem,
+      'parent': parentItem
+    };
+    
+    return roleMap[validRole] || null;
   };
-  const dataItem = selectRole(role);
+  
+  const dataItem = selectRole(role) || [];
   const handleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -60,7 +66,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
           {/* Liste des menus */}
           <div className="mt-4 flex flex-col gap-2">
-            {dataItem?.map((item) => (
+            {Array.isArray(dataItem) && dataItem.map((item) => (
               <div
                 key={item.id}
                 className="relative"

@@ -13,7 +13,7 @@ export interface RapportPaiement {
   annee_scolaire_nom?: string;
   envoyeur_nom?: string;
   statut_paiement?:string;
-  contenu?: Record<string, any>; 
+  contenu?: Record<string, unknown>; 
 }
 
 export interface Paiement {
@@ -44,17 +44,17 @@ export interface RapportDetail {
 // --- API
 const rapportApi = {
   get: async (): Promise<RapportPaiement[]> => {
-    const { data } = await api.get("api/rapport-finance/");
+    const { data } = await api.get("api/rapport-finance/") as { data: RapportPaiement[] };
     return data;
   },
 
   getDetails: async (id: number): Promise<RapportDetail[]> => {
-    const { data } = await api.get(`api/rapport-finance/${id}/details/`);
+    const { data } = await api.get(`api/rapport-finance/${id}/details/`) as { data: RapportDetail[] };
     return data;
   },
 
   add: async (rapport: RapportPaiement): Promise<RapportPaiement> => {
-    const { data } = await api.post("api/rapport-finance/", rapport);
+    const { data } = await api.post("api/rapport-finance/", rapport) as { data: RapportPaiement };
     return data;
   },
 
@@ -70,7 +70,7 @@ const rapportApi = {
     paiementId: number,
     data: Partial<Paiement>
   ): Promise<Paiement> => {
-    const res = await api.patch(`api/rapport-finance/paiement/${paiementId}/`, data);
+    const res = await api.patch(`api/rapport-finance/paiement/${paiementId}/`, data) as { data: Paiement };
     return res.data;
   },
 };

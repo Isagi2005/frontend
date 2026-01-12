@@ -1,4 +1,5 @@
 import { typeData } from "../dataMenu/textData";
+import { getSafeImageSrc } from "../utils/imageUtils";
 
 interface PageProps {
   dataText: typeData[];
@@ -17,9 +18,13 @@ const Page = ({ dataText }: PageProps) => {
           {/* Image */}
           <div className="w-full lg:w-1/2">
             <img
-              src={data.image}
+              src={getSafeImageSrc(data.image, '/placeholder.svg')}
               alt="Illustration"
               className="w-full h-80 object-cover rounded-lg shadow-md"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/placeholder.svg';
+              }}
             />
           </div>
 

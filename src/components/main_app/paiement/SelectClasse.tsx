@@ -36,14 +36,16 @@ const SelectClasse = () => {
     if (anneesScolaires) {
       const mapping: Record<number, string> = {}
       anneesScolaires.forEach((annee) => {
-        mapping[annee.id] = annee.anneeScolaire
+        if (annee.id !== undefined) {
+          mapping[annee.id] = annee.anneeScolaire
+        }
       })
       setAnneeMap(mapping)
     }
   }, [anneesScolaires])
 
   const filteredClasses = selectedAnnee
-    ? classes?.filter((classe) => classe.anneeScolaire === Number(selectedAnnee))
+    ? classes?.filter((classe) => classe.anneeScolaire === selectedAnnee)
     : classes
 
   if (isLoading || isLoadingAnnees) {
@@ -198,7 +200,7 @@ const SelectClasse = () => {
                           <CalendarDays size={14} className="text-indigo-400" />
                           <span>
                             {/* Afficher l'année scolaire complète au lieu de juste l'ID */}
-                            {anneeMap[classe.anneeScolaire] || `Année ${classe.anneeScolaire}`}
+                            {anneeMap[typeof classe.anneeScolaire === 'number' ? classe.anneeScolaire : 0] || `Année ${classe.anneeScolaire}`}
                           </span>
                         </p>
                       </div>
@@ -218,7 +220,7 @@ const SelectClasse = () => {
       </div>
 
       {/* CSS pour les animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;

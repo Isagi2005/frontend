@@ -1,5 +1,4 @@
 // components/InscriptionCard.tsx
-import { useState } from "react";
 import { DemandeType } from "../../../api/siteApi";
 import { Mail, Phone, MapPin, Calendar, BookUser } from "lucide-react";
 import { useDeleteInscription, useUpdateStatut } from "../../../hooks/useSite";
@@ -73,7 +72,7 @@ const InscriptionCard: React.FC<Props> = ({ demande }) => {
           </div>
           <div
             className="flex mx-2 my-2 rounded-md items-center w-30 h-7 hover:bg-red-600"
-            onClick={() => useDelete.mutate(demande.id)}
+            onClick={() => useDelete.mutate(Number(demande.id))}
           >
             <FaTrashAlt /> <div className="hover:cursor-pointer">Supprimer</div>
           </div>

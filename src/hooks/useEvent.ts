@@ -36,7 +36,7 @@ export const useAddEvent = () => {
     mutationKey: ["eventAdd"],
     mutationFn: eventApi.addEvents,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["eventAdd"] );
+      queryClient.invalidateQueries({ queryKey: ["eventAdd"] });
     },
   });
 };
@@ -47,7 +47,7 @@ export const useUpdateEvent = () => {
     mutationKey: ["eventUpdate"],
     mutationFn: eventApi.updateEvents,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["eventUpdate"] );
+      queryClient.invalidateQueries( {queryKey:["eventUpdate"]} );
     },
   });
 };
@@ -58,7 +58,7 @@ export const useDeleteEvent = () => {
     mutationKey: ["eventDelete"],
     mutationFn: eventApi.deleteEvents,
     onSuccess: () => {
-      queryClient.invalidateQueries(["eventDelete"] );
+      queryClient.invalidateQueries({queryKey: ["eventDelete"]} );
     },
   });
 };

@@ -7,7 +7,7 @@ export const useAddPresentation = () => {
     mutationKey: ["presentation"],
     mutationFn: contenuApi.addPresentation,
     onSuccess: () => {
-      queryClient.invalidateQueries(["presentation"]);
+      queryClient.invalidateQueries({queryKey:["presentation"]});
     },
   });
 };
@@ -17,7 +17,7 @@ export const useAddInscription = () => {
     mutationKey: ["demande"],
     mutationFn: contenuApi.addInscription,
     onSuccess: () => {
-      queryClient.invalidateQueries(["demande"]);
+      queryClient.invalidateQueries({ queryKey: ["demande"] });
     },
   });
 };
@@ -61,7 +61,7 @@ export const useUpdateAccueil = () => {
     mutationKey: ["accueil"],
     mutationFn: contenuApi.updateAccueil,
     onSuccess: () => {
-      queryClient.invalidateQueries(["accueil"]);
+      queryClient.invalidateQueries({queryKey:["accueil"]});
     },
   });
 };
@@ -72,7 +72,7 @@ export const useUpdateFooter = () => {
     mutationKey: ["footer"],
     mutationFn: contenuApi.updateFooter,
     onSuccess: () => {
-      queryClient.invalidateQueries(["footer"]);
+      queryClient.invalidateQueries({queryKey:["footer"]});
     },
   });
 };
@@ -83,7 +83,7 @@ export const useUpdatePresentation = () => {
     mutationKey: ["presentation"],
     mutationFn: contenuApi.updatePresentation,
     onSuccess: () => {
-      queryClient.invalidateQueries(["presentation"]);
+      queryClient.invalidateQueries({queryKey:["presentation"]});
     },
   });
 };
@@ -93,7 +93,7 @@ export const useUpdateStatut = () => {
     mutationKey: ["statut"],
     mutationFn: contenuApi.updateStatut,
     onSuccess: () => {
-      queryClient.invalidateQueries(["statut"]);
+      queryClient.invalidateQueries({queryKey:["statut"]});
     },
   });
 };
@@ -104,7 +104,7 @@ export const useDeletePresentation = () => {
     mutationKey: ["presentation"],
     mutationFn: contenuApi.deletePresentation,
     onSuccess: () => {
-      queryClient.invalidateQueries(["presentation"]);
+      queryClient.invalidateQueries({queryKey:["presentation"]});
     },
   });
 };
@@ -115,7 +115,7 @@ export const useDeleteInscription = () => {
     mutationKey: ["inscription"],
     mutationFn: contenuApi.deleteInscription,
     onSuccess: () => {
-      queryClient.invalidateQueries(["inscription"]);
+      queryClient.invalidateQueries({queryKey:["inscription"]});
     },
   });
 };

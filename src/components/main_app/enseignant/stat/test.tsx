@@ -6,7 +6,6 @@ import {
   Typography,
   Box,
   Divider,
-  Grid,
   Paper,
   Avatar,
   Chip,
@@ -19,6 +18,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material"
+import Grid from "@mui/material/Grid2"
 import {
   PieChart,
   Pie,
@@ -88,7 +88,7 @@ export const EnseignantDashboard: React.FC = () => {
 
   const { data: dashboardData, isLoading: loading, isError: error } = useGetDashEnseignant();
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
 
@@ -179,7 +179,7 @@ export const EnseignantDashboard: React.FC = () => {
 
       {/* Cartes de statistiques principales */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid xs={12} sm={6} md={3}>
           <Card
             sx={{ background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)", color: "white", borderRadius: 2 }}
           >
@@ -204,7 +204,7 @@ export const EnseignantDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid xs={12} sm={6} md={3}>
           <Card
             sx={{ background: "linear-gradient(45deg, #4caf50 30%, #8bc34a 90%)", color: "white", borderRadius: 2 }}
           >
@@ -215,7 +215,7 @@ export const EnseignantDashboard: React.FC = () => {
                     Moyenne générale
                   </Typography>
                   <Typography variant="h4" sx={{ fontWeight: "bold", my: 1 }}>
-                    {dashboardData?.moyenne_generale.toFixed(1)}
+                    {dashboardData.moyenne_generale?.toFixed(1)}
                   </Typography>
                   <Typography variant="body2" sx={{ opacity: 0.7 }}>
                     sur 20 points
@@ -229,7 +229,7 @@ export const EnseignantDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid xs={12} sm={6} md={3}>
           <Card
             sx={{ background: "linear-gradient(45deg, #ff9800 30%, #ffb74d 90%)", color: "white", borderRadius: 2 }}
           >
@@ -254,7 +254,7 @@ export const EnseignantDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid xs={12} sm={6} md={3}>
           <Card
             sx={{ background: "linear-gradient(45deg, #f44336 30%, #ff7043 90%)", color: "white", borderRadius: 2 }}
           >
@@ -317,7 +317,7 @@ export const EnseignantDashboard: React.FC = () => {
         <TabPanel value={tabValue} index={0}>
           <Grid container spacing={3}>
             {/* Graphique d'évolution de la moyenne */}
-            <Grid item xs={12} md={8}>
+            <Grid xs={12} md={8}>
               <Card sx={{ height: "100%" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -356,7 +356,7 @@ export const EnseignantDashboard: React.FC = () => {
             </Grid>
 
             {/* Répartition des notes */}
-            <Grid item xs={12} md={4}>
+            <Grid xs={12} md={4}>
               <Card sx={{ height: "100%" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -391,7 +391,7 @@ export const EnseignantDashboard: React.FC = () => {
 </Grid>
 
 {/* Statistiques détaillées */}
-<Grid item xs={12} md={6}>
+<Grid xs={12} md={6}>
   <Card sx={{ height: "100%" }}>
     <CardContent>
       <Typography variant="h6" gutterBottom>
@@ -399,7 +399,7 @@ export const EnseignantDashboard: React.FC = () => {
       </Typography>
       <Box sx={{ p: 2 }}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <Paper elevation={0} sx={{ p: 2, bgcolor: "background.default", borderRadius: 2, textAlign: "center" }}>
               <Typography variant="subtitle2" color="text.secondary">
                 Meilleure moyenne
@@ -410,7 +410,7 @@ export const EnseignantDashboard: React.FC = () => {
               <Chip label="Excellent" color="success" size="small" />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <Paper elevation={0} sx={{ p: 2, bgcolor: "background.default", borderRadius: 2, textAlign: "center" }}>
               <Typography variant="subtitle2" color="text.secondary">
                 Moyenne générale
@@ -421,7 +421,7 @@ export const EnseignantDashboard: React.FC = () => {
               <Chip label="Satisfaisant" color="primary" size="small" />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <Paper elevation={0} sx={{ p: 2, bgcolor: "background.default", borderRadius: 2, textAlign: "center" }}>
               <Typography variant="subtitle2" color="text.secondary">
                 Moyenne minimale
@@ -443,7 +443,7 @@ export const EnseignantDashboard: React.FC = () => {
         {/* Contenu de l'onglet Présence */}
         <TabPanel value={tabValue} index={1}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Card sx={{ height: "100%" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -476,7 +476,7 @@ export const EnseignantDashboard: React.FC = () => {
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Card sx={{ height: "100%" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -484,7 +484,7 @@ export const EnseignantDashboard: React.FC = () => {
                   </Typography>
                   <Box sx={{ p: 2 }}>
                     <Grid container spacing={3}>
-                      <Grid item xs={12}>
+                      <Grid xs={12}>
                         <Paper elevation={0} sx={{ p: 3, bgcolor: "background.default", borderRadius: 2, mb: 2 }}>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Avatar sx={{ bgcolor: "#4caf50", mr: 2 }}>
@@ -505,7 +505,7 @@ export const EnseignantDashboard: React.FC = () => {
                         </Paper>
                       </Grid>
 
-                      <Grid item xs={12}>
+                      <Grid xs={12}>
                         <Paper elevation={0} sx={{ p: 3, bgcolor: "background.default", borderRadius: 2, mb: 2 }}>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Avatar sx={{ bgcolor: "#ff9800", mr: 2 }}>
@@ -521,7 +521,7 @@ export const EnseignantDashboard: React.FC = () => {
                         </Paper>
                       </Grid>
 
-                      <Grid item xs={12}>
+                      <Grid xs={12}>
                         <Paper elevation={0} sx={{ p: 3, bgcolor: "background.default", borderRadius: 2 }}>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Avatar sx={{ bgcolor: "#e53935", mr: 2 }}>
@@ -547,7 +547,7 @@ export const EnseignantDashboard: React.FC = () => {
         {/* Contenu de l'onglet Par matière */}
         <TabPanel value={tabValue} index={2}>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -579,7 +579,7 @@ export const EnseignantDashboard: React.FC = () => {
               </Card>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>

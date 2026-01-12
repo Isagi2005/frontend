@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouteObject } from "react-router-dom";
 import Reinscription from "../pages/inscription/Reinscription";
 import NouvelleDemande from "../pages/inscription/Nouvelle_demande";
 import CalendrierScolaire from "../pages/inscription/CalendrierScolaire";
@@ -12,24 +12,34 @@ import Login from "../pages/Login";
 import Footer from "../components/Footer";
 import Home from "../pages/HomePage";
 import NotFound from "../pages/NotFound";
-
 import Personnel_de_direction from "../pages/les_equipes/Personnel_de_direction";
 import EventPages from "../pages/EventPages";
 import RedirectToDashboard from "../components/GetRole";
 import { routesByRole } from "./routeByRole";
 import ProtectedRoute from "./ProtectedRoute";
 import UserForm from "../components/main_app/personnel/updateUser";
-import DashboardContainer from "../components/main_app/parent/Container";
+
+type Role = 'direction' | 'finance' | 'enseignant' | 'parent';
+
+interface CustomRoute extends Omit<RouteObject, 'children'> {
+  allowedRoles?: Role[];
+  children?: CustomRoute[];
+  path: string;
+  element: React.ReactNode;
+}
 
 
 const AppRoute = () => {
-  const allRoutes = Object.entries(routesByRole).flatMap(([role, routes]) =>
+  const allRoutes: CustomRoute[] = Object.entries(routesByRole).flatMap(([role, routes]) =>
     routes.map((route) => ({
       ...route,
-      allowedRoles: [role],
+      allowedRoles: [role as Role],
+      path: route.path.startsWith('/') ? route.path.slice(1) : route.path
     }))
   );
-  const role = localStorage.getItem("role");
+  
+  const role = localStorage.getItem("role") as Role | null;
+  
   const router = createBrowserRouter([
     {
       path: "",
@@ -96,6 +106,21 @@ const AppRoute = () => {
       element: role && <Login />,
     },
     {
+      path: "/unauthorized",
+      element: <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Accès non autorisé</h1>
+          <p className="text-gray-600 mb-4">Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+          <button 
+            onClick={() => window.history.back()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Retour
+          </button>
+        </div>
+      </div>,
+    },
+    {
       path: "/home",
       element: (
         <ProtectedRoute
@@ -118,11 +143,11 @@ const AppRoute = () => {
         ...allRoutes.map(({ path, element, allowedRoles }) => ({
           path,
           element: (
-            <ProtectedRoute allowedRoles={allowedRoles}>
+            <ProtectedRoute allowedRoles={allowedRoles || []}>
               {element}
             </ProtectedRoute>
           ),
-        })),
+        })) as RouteObject[],
       ],
     },
 

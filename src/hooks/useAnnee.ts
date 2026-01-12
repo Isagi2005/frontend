@@ -30,7 +30,7 @@ export const useAdd = () => {
     mutationKey: ["annee"],
     mutationFn: anneeApi.add,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["annee"] );
+      queryClient.invalidateQueries({ queryKey: ["annee"] });
     },
   });
 };
@@ -41,7 +41,7 @@ export const useUpdate = () => {
     mutationKey: ["annee"],
     mutationFn: anneeApi.update,
     onSuccess: () => {
-      queryClient.invalidateQueries(["annee"] );
+      queryClient.invalidateQueries({ queryKey: ["annee"] });
     },
   });
 };
@@ -52,7 +52,7 @@ export const useDelete = () => {
     mutationKey: ["annee"],
     mutationFn: anneeApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries(["annee"] );
+      queryClient.invalidateQueries({ queryKey: ["annee"] });
     },
   });
 };

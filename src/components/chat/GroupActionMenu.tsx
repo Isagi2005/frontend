@@ -6,7 +6,6 @@ import { useDeleteGroup, useLeaveGroup } from "../../hooks/useChat" // Ajout du 
 
 import { useContext } from "react"
 import AuthContext from "../../api/AuthContext"
-import { UserRole } from "../../api/userApi"
 
 interface GroupActionsMenuProps {
   groupId: number
@@ -28,20 +27,20 @@ const GroupActionsMenu: React.FC<GroupActionsMenuProps> = ({
   const auth = useContext(AuthContext)
   // On suppose que tu as accès à l'utilisateur courant dans le contexte
   // Sinon, adapte ici pour passer le user/role en props
-  // @ts-ignore
+  // @ts-expect-error - auth object may have user property
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const user = auth?.user || auth?.currentUser || null
-  const userRole: UserRole | undefined = user?.profile?.role
 
-  const deleteGroupResult = useDeleteGroup ? useDeleteGroup() : { mutate: () => {}, isLoading: false }
-  const leaveGroupResult = useLeaveGroup ? useLeaveGroup() : { mutate: () => {}, isLoading: false }
+  const deleteGroupResult = useDeleteGroup()
+  const leaveGroupResult = useLeaveGroup()
 
-  const { mutate: deleteGroup, isLoading: isDeleteLoading } = deleteGroupResult
-  const { mutate: leaveGroup, isLoading: isLeaveLoading } = leaveGroupResult
+  const { mutate: deleteGroup } = deleteGroupResult
+  const { mutate: leaveGroup } = leaveGroupResult
 
   const [isOpen, setIsOpen] = useState(false)
   const [confirmAction, setConfirmAction] = useState<"delete" | "leave" | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
-  const isLoading = isDeleteLoading || isLeaveLoading
+  const isLoading = (deleteGroupResult as any).isLoading || (leaveGroupResult as any).isLoading
 
   // Close menu when clicking outside
   useEffect(() => {

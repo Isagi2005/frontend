@@ -271,7 +271,7 @@ const EmployePage = () => {
                                 </span>
                               </td>
                               <td className="py-3 px-4">{formatCurrency(emp.salarie)}</td>
-                              <td className="py-3 px-4">{formatDate(emp.dateEmbauche)}</td>
+                              <td className="py-3 px-4">{formatDate(emp.dateEmbauche || "")}</td>
                               <td className="py-3 px-4 text-center">
                                 <div className="flex justify-center gap-2">
                                   <button
@@ -598,7 +598,12 @@ const EmployePage = () => {
 
         {/* Détails de paie */}
         {selectedEmployeId && !showPaieForm && (
-          <PaieDetailsModal employeId={selectedEmployeId} onClose={() => setSelectedEmployeId(null)} />
+          <PaieDetailsModal 
+            employeId={selectedEmployeId} 
+            employeNom={employes?.find(emp => emp.id === selectedEmployeId)?.nom || ""} 
+            employePrenom={employes?.find(emp => emp.id === selectedEmployeId)?.prenom || ""} 
+            onClose={() => setSelectedEmployeId(null)} 
+          />
         )}
       </div>
     </div>

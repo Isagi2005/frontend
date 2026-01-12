@@ -12,27 +12,27 @@ export interface Facture {
 const factureApi = {
   getAll: async (): Promise<Facture[]> => {
     const { data } = await api.get("api/facture/");
-    return data;
+    return data as Facture[];
   },
 
   getOne: async (id: number): Promise<Facture> => {
     const { data } = await api.get(`api/facture/${id}/`);
-    return data;
+    return data as Facture;
   },
 
   getByEtudiant: async (etudiantId: number): Promise<Facture[]> => {
     const { data } = await api.get(`api/facture/?etudiant=${etudiantId}`);
-    return data;
+    return data as Facture[];
   },
 
   add: async (facture: Facture): Promise<Facture> => {
     const { data } = await api.post("api/facture/", facture);
-    return data;
+    return data as Facture;
   },
 
   update: async (facture: Facture): Promise<Facture> => {
     const { data } = await api.put(`api/facture/${facture.id}/`, facture);
-    return data;
+    return data as Facture;
   },
 
   delete: async (id: number): Promise<void> => {

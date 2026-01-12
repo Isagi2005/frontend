@@ -6,7 +6,6 @@ import {
   Edit,
   Eye,
   User,
-  Calendar,
   MapPin,
   School,
 } from "lucide-react";
@@ -15,6 +14,7 @@ import Dialogue from "../DialogModals";
 import { useDeleteStudent } from "../../../hooks/useStudent";
 import UpdateStudent from "./UpdateStudent";
 import type { StudentProfile } from "../../../api/studentApi";
+import { getSafeImageSrc } from "../../../utils/imageUtils";
 import DetailEtudiant from "./DetailEtudiant";
 
 interface Props {
@@ -24,7 +24,6 @@ interface Props {
 const StudentTable = ({ displayedEtudiants }: Props) => {
   // Ajout pour le modal bulletin
   const [isBulletinOpen, setIsBulletinOpen] = useState(false);
-  const [selectedEleveId, setSelectedEleveId] = useState<number | null>(null);
 
   // Fonction pour ouvrir le modal bulletin
 
@@ -132,7 +131,7 @@ const StudentTable = ({ displayedEtudiants }: Props) => {
               <div className="flex-shrink-0">
                 {viewStudent.image ? (
                   <img
-                    src={viewStudent.image || "/placeholder.svg"}
+                    src={getSafeImageSrc(viewStudent.image) || "/placeholder.svg"}
                     alt={`${viewStudent.prenom} ${viewStudent.nom}`}
                     className="w-32 h-32 object-cover rounded-lg shadow-md"
                   />
@@ -158,7 +157,7 @@ const StudentTable = ({ displayedEtudiants }: Props) => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Classe</h3>
                   <p className="text-lg font-medium">
-                    {viewStudent.classeName || "-"}
+                    {viewStudent.classeName as string || "-"}
                   </p>
                 </div>
 
@@ -263,7 +262,7 @@ const StudentTable = ({ displayedEtudiants }: Props) => {
                       <div className="flex items-center gap-3">
                         {etudiant.image ? (
                           <img
-                            src={etudiant.image || "/placeholder.svg"}
+                            src={getSafeImageSrc(etudiant.image) || "/placeholder.svg"}
                             alt={`${etudiant.prenom} ${etudiant.nom}`}
                             className="w-10 h-10 rounded-full object-cover border border-gray-200"
                           />
@@ -288,7 +287,7 @@ const StudentTable = ({ displayedEtudiants }: Props) => {
                       <div className="flex items-center">
                         <School className="h-4 w-4 text-blue-500 mr-2" />
                         <span className="text-gray-700">
-                          {etudiant.classeName || "-"}
+                          {etudiant.classeName as string || "-"}
                         </span>
                       </div>
                     </td>
@@ -356,7 +355,7 @@ const StudentTable = ({ displayedEtudiants }: Props) => {
       </div>
       {/* Modal Bulletin */}
       <BulletinModal
-        eleveId={selectedEleveId}
+        eleveId={selectedId}
         open={isBulletinOpen}
         onClose={() => setIsBulletinOpen(false)}
       />

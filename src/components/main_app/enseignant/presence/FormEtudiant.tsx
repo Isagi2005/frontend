@@ -3,6 +3,7 @@ import { useAddPresEtudiant } from "../../../../hooks/usePresence";
 import {
   coursProfile,
   presenceEtudiantProfile,
+  VerificationResult,
 } from "../../../../api/presenceApi";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -10,7 +11,7 @@ import { StudentProfile } from "../../../../api/studentApi";
 import { useState } from "react";
 
 interface Props {
-  etudiant: StudentProfile;
+  etudiant: StudentProfile | NonNullable<VerificationResult["students_without_presence"]>[0];
   cours: coursProfile;
 }
 

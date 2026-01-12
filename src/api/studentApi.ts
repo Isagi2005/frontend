@@ -11,14 +11,17 @@ export interface StudentProfile {
   religion: string;
   adresse: string;
   dateDeNaissance: string;
+  telephone?: string;
+  email?: string;
   pere?: string;
   mere?: string;
   classe: ClassProfile | string;
-  classeName: string;
+  className: string;
   parent: User | number;
-  parentX: User;
+  parentX?: User;
   age: string;
   image: string | File | null;
+  [key: string]: unknown;
 }
 
 export interface SheetPreview {
@@ -34,18 +37,26 @@ const prepareFormData = (student: StudentProfile): FormData => {
   formData.append("religion", student.religion);
   formData.append("adresse", student.adresse);
   formData.append("dateDeNaissance", student.dateDeNaissance);
-  formData.append("pere", student.pere);
-  formData.append("mere", student.mere);
+  if (student.pere) formData.append("pere", student.pere);
+  if (student.mere) formData.append("mere", student.mere);
+  if (student.telephone) formData.append("telephone", student.telephone);
+  if (student.email) formData.append("email", student.email);
   if (student.image !== null && student.image instanceof File)
     formData.append("image", student.image);
-  formData.append("classe", student.classe);
-  formData.append("parent", student.parent);
+  if (typeof student.classe === 'string')
+    formData.append("classe", student.classe);
+  else if (student.classe?.id)
+    formData.append("classe", student.classe.id.toString());
+  if (typeof student.parent === 'number')
+    formData.append("parent", student.parent.toString());
+  else if (student.parent?.id)
+    formData.append("parent", student.parent.id.toString());
   return formData;
 };
 
 const studentApi = {
   get: async (): Promise<StudentProfile[]> => {
-    const { data } = await api.get("api/etudiant/");
+    const { data } = await api.get("api/etudiant/") as { data: StudentProfile[] };
     return data;
   },
 
@@ -53,26 +64,27 @@ const studentApi = {
     name: string,
     value: string
   ): Promise<StudentProfile[]> => {
-    const { data } = await api.get(`api/etudiant/?${name}=${value}`);
+    const { data } = await api.get(`api/etudiant/?${name}=${value}`) as { data: StudentProfile[] };
     return data;
   },
 
   getOneStudent: async (id: string): Promise<StudentProfile> => {
-    const { data } = await api.get(`api/etudiant/${id}/`);
+    const { data } = await api.get(`api/etudiant/${id}/`) as { data: StudentProfile };
     return data;
   },
 
-  confirmUpload: async (previewData: SheetPreview): Promise<StudentProfile> => {
+  confirmUpload: async (previewData: SheetPreview[]): Promise<StudentProfile[]> => {
+    const allStudents = previewData.flatMap(item => item.data);
     const { data } = await api.post("/upload-excel/", {
-      students: previewData.flatMap((sheet) => sheet.data),
-    });
+      students: allStudents,
+    }) as { data: StudentProfile[] };
     return data;
   },
 
-  uploadWithExcel: async (formData) => {
+  uploadWithExcel: async (formData: FormData): Promise<SheetPreview> => {
     const { data } = await api.post("/preview-excel/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
-    });
+    }) as { data: SheetPreview };
     return data;
   },
 
@@ -82,7 +94,7 @@ const studentApi = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    });
+    }) as { data: StudentProfile };
     return data;
   },
 
@@ -92,7 +104,7 @@ const studentApi = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    });
+    }) as { data: StudentProfile };
     return data;
   },
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PersonnelTable from "./personnelTable";
 import { UseGetUsers } from "../../../hooks/useUser";
 import SearchBar from "../SearchBar";
@@ -92,7 +92,7 @@ const ListPersonnel = () => {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <PersonnelTable users={displayedData} />
+              <PersonnelTable users={displayedData || []} />
             </div>
           </>
         )}

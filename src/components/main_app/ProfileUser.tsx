@@ -15,17 +15,20 @@ import {
 } from "@heroicons/react/24/outline";
 import { useGetNotifications } from "../../hooks/useNotification";
 import { Notification } from "../../types/notification.types";
-import { useAuth } from "../../api/AuthContext";
+import { UseLogout } from "../../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 
 const ProfileUser = () => {
   const nav = useNavigate();
   const { data: user } = GetUser();
-  const { logout } = useAuth();
-
   const handleLogout = async () => {
-    logout();
-    nav("/login");
+    try {
+      await UseLogout();
+      nav("/login");
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+      nav("/login"); // Rediriger quand même vers la page de connexion en cas d'erreur
+    }
   };
 
   // Notifications dynamiques
@@ -34,7 +37,7 @@ const ProfileUser = () => {
 
   return (
     <div className="flex items-center gap-2 sm:gap-4">
-      {/* Bouton Notifications + Assistant vocal */}
+      {/* Bouton Notifications + Assistant vocal,  */}
       <Menu as="div" className="relative flex items-center gap-2">
         <MenuButton className="relative rounded-full p-1 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="absolute -inset-1.5" />
@@ -102,7 +105,7 @@ const ProfileUser = () => {
             </div>
             <div className="py-1 max-h-60 overflow-y-auto">
               {notifLoading ? (
-                <div className="px-4 py-2 text-sm text-gray-500">Chargement...</div>
+                <div className="shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500">Chargement...</div>
               ) : notifications && (notifications as Notification[]).length > 0 ? (
                 (notifications as Notification[]).map((notif) => (
                   <MenuItem key={notif.id}>
@@ -110,9 +113,11 @@ const ProfileUser = () => {
                       notif.link ? (
                         <a
                           href={notif.link}
-                          className={`$${focus ? "bg-gray-100" : ""} flex px-4 py-2 text-sm text-gray-700`}
+                          className={`${
+                            focus ? "bg-gray-100" : ""
+                          } flex items-center px-4 py-2 text-sm text-gray-700`}
                         >
-                          <div className="flex-shrink-0">
+                          <div className="shrink-0">
                             <BellIcon className="h-5 w-5 text-gray-400" />
                           </div>
                           <div className="ml-3">
@@ -122,9 +127,11 @@ const ProfileUser = () => {
                         </a>
                       ) : (
                         <div
-                          className={`$${focus ? "bg-gray-100" : ""} flex px-4 py-2 text-sm text-gray-700`}
+                          className={`${
+                            focus ? "bg-gray-100" : ""
+                          } flex items-center px-4 py-2 text-sm text-gray-700`}
                         >
-                          <div className="flex-shrink-0">
+                          <div className="shrink-0">
                             <BellIcon className="h-5 w-5 text-gray-400" />
                           </div>
                           <div className="ml-3">
@@ -137,7 +144,7 @@ const ProfileUser = () => {
                   </MenuItem>
                 ))
               ) : (
-                <div className="px-4 py-2 text-sm text-gray-500">Aucune notification.</div>
+                <div className="shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500">Aucune notification.</div>
               )}
             </div>
             <div className="py-1">
@@ -164,7 +171,7 @@ const ProfileUser = () => {
           {user?.profile?.image ? (
             <img
               className="h-8 w-8 rounded-full object-cover"
-              src={user.profile.image}
+              src={typeof user.profile.image === 'string' ? user.profile.image : ''}
               alt="Photo de profil"
             />
           ) : (

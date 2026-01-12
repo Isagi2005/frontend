@@ -17,10 +17,10 @@ export const useEmployees = () => {
     const fetchEmployees = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get('api/employees/'); // Endpoint à adapter
+        const response = await api.get<Employee[]>('api/employees/'); // Endpoint à adapter
         setEmployees(response.data);
       } catch (err) {
-        setError('Erreur lors du chargement des employés');
+        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
       } finally {
         setIsLoading(false);
       }

@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { ClassProfile } from "../../../api/classApi";
 import { BookOpen, User, CalendarFold, Users } from "lucide-react";
 import { useAddClass } from "../../../hooks/useClass";
@@ -19,10 +19,10 @@ const AjoutClasse = () => {
     control,
     formState: { errors },
     reset,
-  } = useForm<ClassProfile>();
+  } = useForm<Record<string, unknown>>();
 
-  const onSubmit = (data: ClassProfile) => {
-    classMutation.mutate(data, {
+  const onSubmit = (data: Record<string, unknown>) => {
+    classMutation.mutate(data as unknown as ClassProfile, {
       onSuccess: () => {
         toast.success("Nouvelle classe crée !");
         reset();
@@ -50,7 +50,7 @@ const AjoutClasse = () => {
           />
         </div>
         {errors.nom && (
-          <p className="text-red-500 text-sm">{errors.nom.message}</p>
+          <p className="text-red-500 text-sm">{errors.nom.message as string}</p>
         )}
 
         {/* Classe */}
@@ -61,11 +61,11 @@ const AjoutClasse = () => {
           <ProfCombobox
             name="titulaire"
             control={control}
-            profs={listEnseignant}
+            profs={listEnseignant || []}
           />
         </div>
         {errors.titulaire && (
-          <p className="text-red-500 text-sm">{errors.titulaire.message}</p>
+          <p className="text-red-500 text-sm">{errors.titulaire.message as string}</p>
         )}
 
         <div className="flex items-center ">
@@ -75,7 +75,7 @@ const AjoutClasse = () => {
           <AnneeCombobox
             name="anneeScolaire"
             control={control}
-            annees={listAnnee}
+            annees={listAnnee || []}
             onCreate={async (newValue: string) => {
               try {
                 await addAnnee.mutateAsync(newValue);
@@ -89,7 +89,7 @@ const AjoutClasse = () => {
           />
         </div>
         {errors.anneeScolaire && (
-          <p className="text-red-500 text-sm">{errors.anneeScolaire.message}</p>
+          <p className="text-red-500 text-sm">{errors.anneeScolaire.message as string}</p>
         )}
         <div className="flex items-center ">
           <span className="p-2 bg-gray-100">
@@ -101,6 +101,7 @@ const AjoutClasse = () => {
             render={({ field }) => (
               <select
                 {...field}
+                value={field.value as string}
                 className="w-full p-2 focus:outline-none bg-white"
               >
                 <option value="prescolaire">Prescolaire</option>
@@ -112,7 +113,7 @@ const AjoutClasse = () => {
           />
         </div>
         {errors.categorie && (
-          <p className="text-red-500 text-sm">{errors.categorie.message}</p>
+          <p className="text-red-500 text-sm">{errors.categorie.message as string}</p>
         )}
         {/* Bouton */}
         <div className="flex justify-center">

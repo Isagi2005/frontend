@@ -10,7 +10,10 @@ export interface Service {
 }
 
 // GET
-export const getServices = () => api.get<Service[]>("api/contenu/services/")
+export const getServices = async () => {
+  const response = await api.get<Service[]>("api/contenu/services/");
+  return response.data;
+}
 
 // POST
 export const createService = (data: FormData) =>
@@ -25,5 +28,7 @@ export const updateService = (id: number, data: FormData) =>
   })
 
 // DELETE
-export const deleteService = (id: number) =>
-  api.delete(`api/contenu/services/${id}/`)
+// In serviceApi.ts
+export const deleteService = (id: number) => {
+  return api.delete(`api/contenu/services/${id}/`);
+};

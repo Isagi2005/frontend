@@ -15,24 +15,24 @@ const congeApi = {
   // Récupérer tous les congés
   get: async (): Promise<Conge[]> => {
     const { data } = await api.get("api/conges/");
-    return data;
+    return data as Conge[];
   },
 
   // Récupérer les congés d’un employé
   getByEmployee: async (employeeId: number): Promise<Conge[]> => {
     const { data } = await api.get(`api/conges/?employee=${employeeId}`);
-    return data;
+    return data as Conge[];
   },
 
   // Récupérer un congé spécifique
   getOne: async (id: number): Promise<Conge> => {
     const { data } = await api.get(`api/conges/${id}/`);
-    return data;
+    return data as Conge;
   },
 
   // Ajouter un congé
-  add: async (conge: Conge): Promise<Conge> => {
-    const { data } = await api.post("api/conges/", conge);
+  add: async (congeData: Omit<Conge, 'id'>): Promise<Conge> => {
+    const { data } = await api.post('/api/conges/', congeData) as { data: Conge };
     return data;
   },
 
@@ -40,7 +40,7 @@ const congeApi = {
   update: async (conge: Conge): Promise<Conge> => {
     if (!conge.id) throw new Error("ID requis pour la mise à jour du congé.");
     const { data } = await api.put(`api/conges/${conge.id}/`, conge);
-    return data;
+    return data as Conge;
   },
 
   // Supprimer un congé
@@ -49,13 +49,13 @@ const congeApi = {
   },
   createForEmployee: async (employeeId: number, congeData: Omit<Conge, 'id' | 'employe'>): Promise<Conge> => {
     const { data } = await api.post("api/conges/", { ...congeData, employe: employeeId });
-    return data;
+    return data as Conge;
   },
   
   // Méthode pour récupérer tous les employés
   getEmployees: async (): Promise<Employe[]> => {
     const { data } = await api.get("api/employee/");
-    return data;
+    return data as Employe[];
   }
 };
 

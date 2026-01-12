@@ -44,7 +44,7 @@ const ListEtudiant = ({ listClasse }: Props) => {
 
   // Tri des étudiants
   const sortedEtudiants = filteredEtudiants?.sort((a, b) =>
-    a[sortBy].localeCompare(b[sortBy])
+    (a[sortBy] as string).localeCompare(b[sortBy] as string)
   );
 
   // Pagination
@@ -88,7 +88,7 @@ const ListEtudiant = ({ listClasse }: Props) => {
     const total = sortedEtudiants.length;
     const garcons = sortedEtudiants.filter(e => e.sexe === "H").length;
     const filles = sortedEtudiants.filter(e => e.sexe === "F").length;
-    const finalY = (doc as any).lastAutoTable.finalY || 36 + 10;
+    const finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable?.finalY || 36 + 10;
     doc.setFontSize(11);
     doc.text(`Effectif total : ${total}`, 14, finalY + 10);
     doc.text(`Garçons : ${garcons}   Filles : ${filles}`, 14, finalY + 18);
@@ -111,7 +111,7 @@ const ListEtudiant = ({ listClasse }: Props) => {
     ]);
     // Ajouter les infos en bas
     data.push([]);
-    data.push(["Classe", classe]);
+    data.push(["Classe", classe as string]);
     data.push(["Effectif total", total]);
     data.push(["Garçons", garcons]);
     data.push(["Filles", filles]);
@@ -162,7 +162,7 @@ const ListEtudiant = ({ listClasse }: Props) => {
         </button>
       </div>
 
-      <StudentTable displayedEtudiants={displayedEtudiants} />
+      <StudentTable displayedEtudiants={displayedEtudiants || []} />
 
       <Pagination
         currentPage={currentPage}

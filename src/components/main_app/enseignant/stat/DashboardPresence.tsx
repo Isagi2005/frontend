@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, Grid, Paper, Avatar } from "@mui/material";
+import { Card, CardContent, Typography, Box, Paper, Avatar } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Users, Clock, Calendar } from "lucide-react";
 
@@ -9,15 +9,21 @@ interface PresencePieData {
   color: string;
 }
 
+interface DashboardData {
+  total_etudiants: number;
+  retards_30plus: number;
+  absences_demi_journee: number;
+}
+
 interface DashboardPresenceProps {
   presencePieData: PresencePieData[];
-  dashboardData: any;
+  dashboardData: DashboardData;
 }
 
 const DashboardPresence: React.FC<DashboardPresenceProps> = ({ presencePieData, dashboardData }) => {
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
+    <Box display="flex" flexWrap="wrap" gap={3}>
+      <Box flex="1 0 50%" maxWidth="sm">
         <Card sx={{ height: "100%" }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -48,16 +54,16 @@ const DashboardPresence: React.FC<DashboardPresenceProps> = ({ presencePieData, 
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-      <Grid item xs={12} md={6}>
+      </Box>
+      <Box flex="1 0 50%" maxWidth="sm">
         <Card sx={{ height: "100%" }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               Statistiques de présence
             </Typography>
             <Box sx={{ p: 2 }}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
+              <Box display="flex" flexWrap="wrap" gap={3}>
+                <Box flex="1 0 100%">
                   <Paper elevation={0} sx={{ p: 3, bgcolor: "background.default", borderRadius: 2, mb: 2 }}>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Avatar sx={{ bgcolor: "#4caf50", mr: 2 }}>
@@ -73,8 +79,8 @@ const DashboardPresence: React.FC<DashboardPresenceProps> = ({ presencePieData, 
                       </Box>
                     </Box>
                   </Paper>
-                </Grid>
-                <Grid item xs={12}>
+                </Box>
+                <Box flex="1 0 100%">
                   <Paper elevation={0} sx={{ p: 3, bgcolor: "background.default", borderRadius: 2, mb: 2 }}>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Avatar sx={{ bgcolor: "#ff9800", mr: 2 }}>
@@ -88,8 +94,8 @@ const DashboardPresence: React.FC<DashboardPresenceProps> = ({ presencePieData, 
                       </Box>
                     </Box>
                   </Paper>
-                </Grid>
-                <Grid item xs={12}>
+                </Box>
+                <Box flex="1 0 100%">
                   <Paper elevation={0} sx={{ p: 3, bgcolor: "background.default", borderRadius: 2 }}>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Avatar sx={{ bgcolor: "#e53935", mr: 2 }}>
@@ -103,13 +109,13 @@ const DashboardPresence: React.FC<DashboardPresenceProps> = ({ presencePieData, 
                       </Box>
                     </Box>
                   </Paper>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

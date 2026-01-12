@@ -14,19 +14,19 @@ interface Props {
   cours: coursProfile
 }
 
-const PresenceRow = ({ etudiant, cours }: Props) => {
+const PresenceSummary = ({ etudiant, cours }: Props) => {
   const { register, handleSubmit, reset, setValue, watch } = useForm<presenceEtudiantProfile>({
     defaultValues: {
       statut: "P",
     },
   })
-  const { mutate, isLoading } = useAddPresEtudiant()
+  const { mutate, isPending } = useAddPresEtudiant()
   const [showHeureA, setShowHeureA] = useState(false)
   const [showRaison, setShowRaison] = useState(false)
 
   const statut = watch("statut")
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: "P" | "A" | "R") => {
     if (value === "R") {
       setShowHeureA(true)
       setShowRaison(false)
@@ -82,8 +82,8 @@ const PresenceRow = ({ etudiant, cours }: Props) => {
             value={statut}
             {...register("statut", { required: true })}
             onChange={(e) => {
-              handleStatusChange(e.target.value)
-              setValue("statut", e.target.value)
+              handleStatusChange(e.target.value as "P" | "A" | "R")
+              setValue("statut", e.target.value as "P" | "A" | "R")
             }}
             size="small"
           >
@@ -121,14 +121,14 @@ const PresenceRow = ({ etudiant, cours }: Props) => {
           color="primary"
           size="small"
           onClick={handleSubmit(onSubmit)}
-          disabled={isLoading}
-          startIcon={isLoading ? <CircularProgress size={16} /> : <Check size={16} />}
+          disabled={isPending}
+          startIcon={isPending ? <CircularProgress size={16} /> : <Check size={16} />}
         >
-          {isLoading ? "Envoi..." : "Valider"}
+          {isPending ? "Envoi..." : "Valider"}
         </Button>
       </TableCell>
     </TableRow>
   )
 }
 
-export default PresenceRow
+export default PresenceSummary

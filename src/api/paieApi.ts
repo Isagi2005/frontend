@@ -23,16 +23,16 @@ export interface PaieParams {
 const paieApi = {
   create: async (paie: PaieParams): Promise<Paie> => {
     const { data } = await api.post("api/paie/", paie);
-    return data;
+    return data as Paie;
   },
 
   getByEmploye: async (employeId: number): Promise<Paie[]> => {
     const { data } = await api.get(`api/paie/?employe_id=${employeId}`);
-    return data;
+    return data as Paie[];
   },
   update: async (id: number, paie: Partial<PaieParams>): Promise<Paie> => {
     const { data } = await api.patch(`api/paie/${id}/`, paie);
-    return data;
+    return data as Paie;
   },
 
   delete: async (id: number): Promise<void> => {

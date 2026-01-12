@@ -17,7 +17,7 @@ const FairePresence = ({ cours }: Props) => {
   return (
     <div>
       {data.mode === "update" ? (
-        <UpdatePres displayedData={data.presences} />
+        <UpdatePres displayedData={data.presences || []} />
       ) : (
         <div>
           <h3 className="text-lg font-bold">Faire la présence</h3>
@@ -37,14 +37,14 @@ const FairePresence = ({ cours }: Props) => {
               </tr>
             </thead>
             <tbody>
-              {data.students_without_presence.length === 0 ? (
+              {(data.students_without_presence || []).length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-6 text-gray-500">
                     Aucun étudiant sans fiche de présence
                   </td>
                 </tr>
               ) : (
-                data.students_without_presence.map((etudiant) => (
+                (data.students_without_presence || []).map((etudiant) => (
                   <FormEtudiant
                     key={etudiant.id}
                     etudiant={etudiant}

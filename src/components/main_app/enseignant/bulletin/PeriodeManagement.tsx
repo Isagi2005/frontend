@@ -28,13 +28,13 @@ import type { UseFormRegister } from "react-hook-form";
 import type { AnneeProfile } from "../../../../api/anneeApi";
 
 interface SelectAnneeScolaireProps {
-  register: UseFormRegister<any>;
+  register: UseFormRegister<Partial<PeriodeType>>;
   error: boolean;
   helperText?: string;
   defaultValue?: string | number;
 }
 const SelectAnneeScolaire: React.FC<SelectAnneeScolaireProps> = ({ register, error, helperText, defaultValue }) => {
-  const { data: annees, isLoading } = useGetAnnees();
+  const { data: annees } = useGetAnnees();
   return (
     <FormControl fullWidth margin="normal" error={error}>
       <InputLabel id="annee-scolaire-label">Année scolaire</InputLabel>
@@ -67,13 +67,13 @@ const PeriodeManagement: React.FC = () => {
 
   const openAddDialog = () => {
     setEditingPeriode(null);
-    reset({ nom: '', ordre: '', annee_id: '' });
+    reset({ nom: '', ordre: 0, anneeScolaire: 0 });
     setDialogOpen(true);
   };
 
   const openEditDialog = (periode: PeriodeType) => {
     setEditingPeriode(periode);
-    reset({ nom: periode.nom, ordre: periode.ordre, annee_id: periode.annee_id });
+    reset({ nom: periode.nom, ordre: periode.ordre, anneeScolaire: periode.anneeScolaire });
     setDialogOpen(true);
   };
 
@@ -83,11 +83,17 @@ const PeriodeManagement: React.FC = () => {
     reset();
   };
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: Partial<PeriodeType>) => {
     // anneeScolaire doit être envoyé comme id (number)
-    const payload = {
-      ...values,
-      anneeScolaire: Number(values.anneeScolaire)
+    const payload: PeriodeType = {
+      id: editingPeriode?.id || 0,
+      anneeScolaire: Number(values.anneeScolaire),
+      nom: values.nom || '',
+      typePeriode: values.typePeriode || '',
+      ordre: values.ordre || 0,
+      dateDebut: values.dateDebut || '',
+      dateFin: values.dateFin || '',
+      anneeScolaireNom: values.anneeScolaireNom || ''
     };
     if (editingPeriode) {
       updatePeriode.mutate(
@@ -167,7 +173,7 @@ const PeriodeManagement: React.FC = () => {
                     color="error"
                     onClick={() => confirmDelete(periode.id)}
                     size="small"
-                    disabled={deletePeriode.isLoading && deleteId === periode.id}
+                    disabled={deletePeriode.isPending && deleteId === periode.id}
                   >
                     <Delete fontSize="small" />
                   </IconButton>
@@ -237,12 +243,12 @@ const PeriodeManagement: React.FC = () => {
               register={register}
               error={!!errors.anneeScolaire}
               helperText={errors.anneeScolaire?.message}
-              defaultValue={editingPeriode?.anneeScolaire?.id || ""}
+              defaultValue={typeof editingPeriode?.anneeScolaire === 'number' ? editingPeriode.anneeScolaire : (editingPeriode?.anneeScolaire?.id || 0)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={closeDialog}>Annuler</Button>
-            <Button type="submit" variant="contained" color="primary" disabled={addPeriode.isLoading || updatePeriode.isLoading}>
+            <Button type="submit" variant="contained" color="primary" disabled={addPeriode.isPending || updatePeriode.isPending}>
               {editingPeriode ? "Enregistrer" : "Créer"}
             </Button>
           </DialogActions>

@@ -9,7 +9,7 @@ const VoiceAssistantButton: React.FC<{
 }> = ({ onTranscript }) => {
   const recognitionRef = useRef<any>(null);
   const [listening, setListening] = useState(false);
-  const [lastTranscript, setLastTranscript] = useState("");
+  const [, setLastTranscript] = useState("");
 
   // Démarre la reconnaissance vocale
   const startListening = () => {

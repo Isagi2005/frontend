@@ -6,16 +6,23 @@ import {
   deleteService,
 } from "../api/serviceApi"
 
+import type { Service as ApiService } from "../api/serviceApi";
+
+export type Service = ApiService;
+
 export const useGetServices = () =>
-  useQuery({
+  useQuery<Service[]>({
     queryKey: ["services"],
-    queryFn: () => getServices().then(res => res.data),
+    queryFn: getServices
   })
 
 export const useCreateService = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: FormData) => createService(data).then(res => res.data),
+    mutationFn: async (data: FormData): Promise<Service> => {
+      const response = await createService(data);
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["services"] })
     },
@@ -25,25 +32,26 @@ export const useCreateService = () => {
 export const useUpdateService = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number
-      data: FormData
-    }) => updateService(id, data).then(res => res.data),
+    mutationFn: async ({ id, data }: { id: number; data: FormData }) => {
+      const response = await updateService(id, data)
+      return response.data
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["services"] })
     },
   })
 }
 
+// In useService.ts
 export const useDeleteService = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) => deleteService(id),
+    mutationFn: async (id: number) => {
+      const response = await deleteService(id);
+      return response.data;
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["services"] })
+      queryClient.invalidateQueries({ queryKey: ["services"] });
     },
   })
 }

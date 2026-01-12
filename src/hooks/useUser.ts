@@ -33,7 +33,7 @@ export const useAddUser = () => {
     mutationKey: ["usersAdd"],
     mutationFn: userApi.addUser,
     onSuccess: () => {
-      queryClient.invalidateQueries(["usersAdd"]);
+      queryClient.invalidateQueries({ queryKey: ["usersAdd"] });
     },
   });
 };
@@ -43,7 +43,7 @@ export const useAddProfile = () => {
     mutationKey: ["profileAdd"],
     mutationFn: userApi.addProfile,
     onSuccess: () => {
-      queryClient.invalidateQueries(["profileAdd"]);
+      queryClient.invalidateQueries({ queryKey: ["profileAdd"] });
     },
   });
 };
@@ -54,7 +54,7 @@ export const useUpdateUser = () => {
     mutationKey: ["userUpdateuserUpdate"],
     mutationFn: userApi.updateUser,
     onSuccess: () => {
-      queryClient.invalidateQueries(["userUpdate"]);
+      queryClient.invalidateQueries({ queryKey: ["userUpdate"] });
     },
   });
 };
@@ -64,7 +64,7 @@ export const UseUpdateProfile = () => {
     mutationKey: ["profile"],
     mutationFn: userApi.updateProfile,
     onSuccess: () => {
-      queryClient.invalidateQueries(["profile"]);
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -75,7 +75,7 @@ export const useDeleteUser = () => {
     mutationKey: ["userDelete"],
     mutationFn: userApi.deleteUser,
     onSuccess: () => {
-      queryClient.invalidateQueries(["userDelete"]);
+      queryClient.invalidateQueries({ queryKey: ["userDelete"] });
     },
   });
 };

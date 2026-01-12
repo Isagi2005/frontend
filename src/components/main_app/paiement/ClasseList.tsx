@@ -71,7 +71,7 @@ const ClasseList: React.FC = () => {
       setCertificatTexte(texte)
       setCertificatStudent(student)
     } catch (err) {
-      showNotification("Erreur lors de la génération du certificat", false)
+      showNotification("Erreur lors de la génération du certificat")
       console.error(err)
     } finally {
       setIsGeneratingCertificat(false)
@@ -83,16 +83,16 @@ const ClasseList: React.FC = () => {
       setIsGeneratingCertificat(true)
       const texte = await generateCertificatText(student)
       await exportCertificatDocx(student, texte)
-      showNotification(`Certificat de ${student.prenom} ${student.nom} téléchargé avec succès`, true)
+      showNotification(`Certificat de ${student.prenom} ${student.nom} téléchargé avec succès`)
     } catch (err) {
-      showNotification("Erreur lors du téléchargement du certificat", false)
+      showNotification("Erreur lors du téléchargement du certificat")
       console.error(err)
     } finally {
       setIsGeneratingCertificat(false)
     }
   }
 
-  const showNotification = (message: string, isSuccess: boolean) => {
+  const showNotification = (message: string) => {
     setSuccessMessage(message)
     setShowSuccessMessage(true)
     setTimeout(() => setShowSuccessMessage(false), 3000)

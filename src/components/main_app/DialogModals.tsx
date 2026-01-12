@@ -1,13 +1,21 @@
 import { Dialog, DialogTitle, Description } from "@headlessui/react";
 import { toast } from "react-toastify";
 
+interface DialogueProps {
+  selectedId: number | null;
+  setSelectedId: React.Dispatch<React.SetStateAction<number | null>>;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  mutation: any; // UseMutationResult<void, Error, number, unknown>
+}
+
 const Dialogue = ({
   selectedId,
   setSelectedId,
   isOpen,
   setIsOpen,
   mutation,
-}) => {
+}: DialogueProps) => {
   const handleDelete = () => {
     console.log(selectedId);
     mutation.mutate(selectedId, {

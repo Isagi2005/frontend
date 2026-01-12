@@ -1,15 +1,7 @@
 "use client"
 
-import { useState } from "react"
 
 const Personnel_de_direction = () => {
-  const [expandedNodes, setExpandedNodes] = useState<number[]>([1])
-
-  const toggleNode = (id: number) => {
-    setExpandedNodes((prev) =>
-      prev.includes(id) ? prev.filter((nodeId) => nodeId !== id) : [...prev, id]
-    )
-  }
 
   const getBackgroundColor = (type?: string) => {
     switch (type) {
@@ -41,7 +33,6 @@ const Personnel_de_direction = () => {
           {/* Direction */}
           <div
             className={`${getBackgroundColor("direction")} border border-gray-300 p-4 rounded-lg shadow text-center cursor-pointer hover:opacity-90 transition w-64 mb-4`}
-            onClick={() => toggleNode(1)}
           >
             <div className="font-bold">Directeur Général</div>
             <div className="text-sm">Direction</div>

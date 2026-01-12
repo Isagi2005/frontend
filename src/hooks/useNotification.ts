@@ -7,17 +7,23 @@ interface NotificationData {
   canal: "email" | "whatsapp";
 }
 
+interface NotificationResponse {
+  success: boolean;
+  message?: string;
+  errors?: string[];
+}
+
 export const useNotifierEtudiant = () => {
-  return useMutation({
-    mutationFn: (data: NotificationData) => notificationApi.notifierImpaye(data),
-    onSuccess: (data) => {
+  return useMutation<NotificationResponse, Error, NotificationData>({
+    mutationFn: (data: NotificationData) => notificationApi.notifierImpaye(data) as Promise<NotificationResponse>,
+    onSuccess: (data: NotificationResponse) => {
       if (data.success) {
         toast.success("Notification envoyée avec succès !");
       } else {
         toast.error("Échec de la notification : " + (data.errors?.join(", ") || "Erreur inconnue"));
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error("Erreur lors de l'envoi de la notification.");
       console.error("Notification error:", error);
     },

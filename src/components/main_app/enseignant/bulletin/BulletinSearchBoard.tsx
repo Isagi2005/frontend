@@ -4,9 +4,9 @@ import { useGetClass } from '../../../../hooks/useClass';
 import SearchBar from '../../SearchBar';
 import Filter from '../../Filter';
 import BulletinView from './BulletinView';
-import BulletinForm from './BulletinForm';
 import { Button, Dialog, DialogContent } from '@mui/material';
 import { exportBulletinPDF } from './exportBulletinPDF';
+import type { BulletinType } from '../../../../api/bulletinApi';
 
 const BulletinSearchBoard: React.FC = () => {
   const { data: periodes } = useGetPeriode();
@@ -16,12 +16,10 @@ const BulletinSearchBoard: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedBulletin, setSelectedBulletin] = useState<number|null>(null);
-  const [editBulletin, setEditBulletin] = useState<number|null>(null);
-  const [showForm, setShowForm] = useState(false);
   const deleteMutation = useDeleteBulletin();
 
   const filteredBulletins = Array.isArray(listBulletins)
-    ? listBulletins.filter((bulletin) => {
+    ? listBulletins.filter((bulletin: BulletinType) => {
         const matchesSearch = `${bulletin.eleve_nom || bulletin.eleve}`.toLowerCase().includes(search.toLowerCase());
         const matchesPeriod = selectedPeriod ? bulletin.periode_nom === selectedPeriod : true;
         const matchesClass = selectedClass ? bulletin.classe_nom === selectedClass : true;
@@ -31,7 +29,7 @@ const BulletinSearchBoard: React.FC = () => {
 
 
   // Export PDF du bulletin avec évaluations, présentation professionnelle
-const handleExportPDF = (bulletin: any) => {
+const handleExportPDF = (bulletin: BulletinType) => {
   exportBulletinPDF(bulletin);
 };
 
@@ -39,12 +37,9 @@ const handleExportPDF = (bulletin: any) => {
     <div>
       <div className='flex gap-4 mb-4'>
         <SearchBar search={search} setSearch={setSearch} />
-        <Filter listData={periodes} selectedFilter={selectedPeriod} setSelectedFilter={setSelectedPeriod} label="Période" />
-        <Filter listData={classes} selectedFilter={selectedClass} setSelectedFilter={setSelectedClass} label="Classe" />
+        <Filter listData={periodes} selectedFilter={selectedPeriod} setSelectedFilter={setSelectedPeriod} />
+        <Filter listData={classes} selectedFilter={selectedClass} setSelectedFilter={setSelectedClass} />
       </div>
-      {showForm && (
-        <BulletinForm bulletinId={editBulletin} onClose={() => setShowForm(false)} />
-      )}
       <table className="min-w-full border mb-6">
         <thead>
           <tr className="bg-gray-100">
@@ -58,7 +53,7 @@ const handleExportPDF = (bulletin: any) => {
           {filteredBulletins.map((bulletin) => (
             <tr key={bulletin.id}>
               <td className="border px-2 py-1">{bulletin.eleve_nom || bulletin.eleve}</td>
-              <td className="border px-2 py-1">{bulletin.classe_nom || bulletin.classeName}</td>
+              <td className="border px-2 py-1">{bulletin.classe_nom}</td>
               <td className="border px-2 py-1">{bulletin.periode_nom || bulletin.periode}</td>
               <td className="border px-2 py-1 flex gap-2">
                 <Button size="small" variant="outlined" onClick={() => setSelectedBulletin(bulletin.id)}>Voir</Button>

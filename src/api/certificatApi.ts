@@ -7,19 +7,20 @@ interface CertificatData {
   texte_certificat?: string;
 }
 
-export const generateCertificatText = async (etudiant: any) => {
+export const generateCertificatText = async (etudiant: { id: number; nom: string; prenom: string }) => {
   const data: CertificatData = {
     etudiant_id: etudiant.id,
     annee_scolaire: `${new Date().getFullYear() - 1}-${new Date().getFullYear()}`
   };
 
   const response = await api.post("api/certificat/generer/", data);
-  return response.data.texte_certificat;
+  return (response.data as { texte_certificat: string }).texte_certificat;
 };
 
-export const exportCertificatDocx = async (etudiant: any, texteCertificat: string) => {
+export const exportCertificatDocx = async (etudiant: { id: number; nom: string; prenom: string }, texteCertificat: string) => {
   const data: CertificatData = {
     etudiant_id: etudiant.id,
+    annee_scolaire: `${new Date().getFullYear() - 1}-${new Date().getFullYear()}`,
     texte_certificat: texteCertificat
   };
 
@@ -28,7 +29,7 @@ export const exportCertificatDocx = async (etudiant: any, texteCertificat: strin
   });
   
   // Créer un lien de téléchargement
-  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const url = window.URL.createObjectURL(new Blob([response.data as BlobPart]));
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `certificat_${etudiant.nom}_${etudiant.prenom}.docx`);

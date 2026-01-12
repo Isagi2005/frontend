@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, Grid } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from "recharts";
 
 interface MatiereData {
@@ -16,7 +17,7 @@ interface DashboardMatiereProps {
 const DashboardMatiere: React.FC<DashboardMatiereProps> = ({ matieres }) => {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>

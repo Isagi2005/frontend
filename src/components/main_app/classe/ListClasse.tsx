@@ -51,7 +51,7 @@ const ListClasse = () => {
           setSelectedFilter={setSelectedFilter}
         />
       </div>
-      {load ? <Loading /> : <ClasseTable displayedData={displayedClasse} />}
+      {load ? <Loading /> : <ClasseTable displayedData={displayedClasse || []} />}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

@@ -9,7 +9,6 @@ export const useGetMessages = (conversationId: number, conversationType: 'privat
     queryKey: ["chat", "messages", conversationId, conversationType],
     queryFn: () => chatApi.getMessages(conversationId, conversationType),
     enabled: !!conversationId && !!conversationType,
-    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -20,7 +19,9 @@ export const useSendMessage = (conversationId: number, conversationType: 'privat
     mutationFn: (payload: { content?: string; file?: File; image?: File }) =>
       chatApi.sendMessage({ conversationId, conversationType, ...payload }),
     onSuccess: () => {
-      queryClient.invalidateQueries(["chat", "messages", conversationId, conversationType] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "messages", conversationId, conversationType] 
+      });
     },
   });
 };
@@ -73,7 +74,9 @@ export const useCreateConversation = () => {
   return useMutation({
     mutationFn: chatApi.createConversation,
     onSuccess: () => {
-      queryClient.invalidateQueries( ["chat", "conversations"] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "conversations"] 
+      });
     },
   });
 };
@@ -83,7 +86,9 @@ export const useCreatePrivateConversation = () => {
   return useMutation({
     mutationFn: (userId: number) => chatApi.createConversation({ participantIds: [userId] }),
     onSuccess: () => {
-      queryClient.invalidateQueries(["chat", "conversations"] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "conversations"] 
+      });
     },
   });
 };
@@ -95,7 +100,9 @@ export const useCreateGroupConversation = () => {
     mutationFn: ({ name, memberIds }: { name: string; memberIds: number[] }) =>
       chatApi.createConversation({ participantIds: memberIds, name }),
     onSuccess: () => {
-      queryClient.invalidateQueries(["chat", "conversations"] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "conversations"] 
+      });
     },
   });
 };
@@ -107,7 +114,9 @@ export const useDeleteConversation = () => {
     mutationFn: ({ conversationId, conversationType }: { conversationId: number; conversationType: 'private' | 'group' }) =>
       chatApi.deleteConversation(conversationId, conversationType),
     onSuccess: () => {
-      queryClient.invalidateQueries(["chat", "conversations"] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "conversations"] 
+      });
     },
   });
 };
@@ -118,8 +127,12 @@ export const useLeaveGroup = () => {
   return useMutation({
     mutationFn: (groupId: number) => chatApi.leaveGroup(groupId),
     onSuccess: () => {
-      queryClient.invalidateQueries(["chat", "groups"]);
-      queryClient.invalidateQueries(["chat", "conversations"]);
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "groups"] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "conversations"] 
+      });
     },
   });
 };
@@ -130,8 +143,12 @@ export const useDeleteGroup = () => {
   return useMutation({
     mutationFn: (groupId: number) => chatApi.deleteGroup(groupId),
     onSuccess: () => {
-      queryClient.invalidateQueries(["chat", "groups"] );
-      queryClient.invalidateQueries( ["chat", "conversations"] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "groups"] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "conversations"] 
+      });
     },
   });
 };
@@ -157,9 +174,11 @@ export const useDeleteMessage = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (messageId: number) => chatApi.deleteMessage(messageId),
-    onSuccess: (_data, variables, context) => {
+    onSuccess: () => {
       // Invalide tous les messages de toutes les conversations (ou affiner avec un paramètre)
-      queryClient.invalidateQueries( ["chat", "messages"] );
+      queryClient.invalidateQueries({ 
+        queryKey: ["chat", "messages"] 
+      });
     },
   });
 };

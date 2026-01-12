@@ -1,20 +1,6 @@
 import type React from "react"
 import { useState } from "react"
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Grid,
-  Paper,
-  Chip,
-  Tab,
-  Tabs,
-  LinearProgress,
-  useTheme,
-  useMediaQuery,
-  Button
-} from "@mui/material";
+import { Card, CardContent, Typography, Box, Paper, Tab, Tabs, LinearProgress, useTheme, useMediaQuery, Button, Chip } from "@mui/material";
 import {
   BookOpen,
   BarChart2,
@@ -265,8 +251,8 @@ export const DirectionDashboard: React.FC = () => {
         {/* Contenu de l'onglet Par matière */}
         <TabPanel value={tabValue} index={2}>
           <Box mt={2}>
-            <Grid container>
-              <Grid item xs={12}>
+            <Box display="flex" flexDirection="column">
+              <Box width="100%">
                 <Card>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
@@ -364,8 +350,8 @@ export const DirectionDashboard: React.FC = () => {
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </Box>
         </TabPanel>
       </Paper>

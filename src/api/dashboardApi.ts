@@ -112,7 +112,7 @@ export interface TypePerformanceEleve {
 const dashApi = {
   getParentPedagogique: async (): Promise<ParentEnfantPedagogique[]> => {
     const response = await api.get('/api/parent/pedagogique/');
-    return response.data;
+    return response.data as ParentEnfantPedagogique[];
   },
   getDashboardEnseignant: async (params?: {
     classe_id?: number;
@@ -120,11 +120,11 @@ const dashApi = {
     trimestre_id?: number;
   }): Promise<DashboardData> => {
     const response = await api.get('/api/dashboard/enseignant/stats/', { params });
-    return response.data;
+    return response.data as DashboardData;
   },
   getDashboardFilters: async (): Promise<DashboardFilters> => {
     const response = await api.get('/api/dashboard/enseignant/filters/');
-    return response.data;
+    return response.data as DashboardFilters;
   },
   getDashboardDirection: async (params?: {
     classe_id?: number;
@@ -132,18 +132,18 @@ const dashApi = {
     trimestre_id?: number;
   }): Promise<DashboardData> => {
     const response = await api.get('/api/dashboard/direction/stats/', { params });
-    return response.data;
+    return response.data as DashboardData;
   },
   getDirFilters: async (): Promise<DashboardFilters> => {
     const response = await api.get('/api/dashboard/direction/filters/');
-    return response.data;
+    return response.data as DashboardFilters;
   },
   getPerformanceEleve: async (
     eleveId: number,
     params?: { trimestre_id?: number | string }
   ): Promise<TypePerformanceEleve> => {
     const response = await api.get(`/api/eleves/${eleveId}/stats/`, { params });
-    return response.data;
+    return response.data as TypePerformanceEleve;
   },
 };
 

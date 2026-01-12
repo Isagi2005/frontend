@@ -53,7 +53,7 @@ const RapportPedagogiqueBoard: React.FC = () => {
   if (search) params["tache"] = search;
   params["auteur"] = "me";
 
-  const { data: rapports, refetch, isLoading, isError } = useGetRapportsGenerics(params);
+  const { data: rapports, refetch, isError } = useGetRapportsGenerics(params);
   const addRapport = useAddRapport();
   const updateRapport = useUpdateRapport();
   const deleteRapport = useDeleteRapport();
@@ -231,7 +231,7 @@ const RapportPedagogiqueBoard: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog} color="secondary">Annuler</Button>
-            <Button type="submit" color="primary" variant="contained" disabled={addRapport.isLoading || updateRapport.isLoading}>
+            <Button type="submit" color="primary" variant="contained" disabled={addRapport.isPending || updateRapport.isPending}>
               {editId ? "Enregistrer" : "Créer"}
             </Button>
           </DialogActions>
@@ -241,7 +241,7 @@ const RapportPedagogiqueBoard: React.FC = () => {
       <Typography variant="h6" className="mt-8 mb-2 font-semibold">Liste de mes rapports</Typography>
       {isError ? (
         <Typography color="error">Erreur lors du chargement des rapports pédagogiques.</Typography>
-      ) : isLoading ? (
+      ) : rapports === undefined ? (
         <Typography>Chargement...</Typography>
       ) : (
         <TableContainer component={Paper} className="shadow">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useCreateService, useDeleteService, useGetServices, useUpdateService } from "../../hooks/useService"
 
 interface ServiceFormData {
@@ -64,8 +64,17 @@ const ServiceManager: React.FC = () => {
     resetForm()
   }
 
+  // Interface pour le type Service
+  interface Service {
+    id: number;
+    service_type: string;
+    title: string;
+    description: string;
+    image: string;
+  }
+
   // Préparer l’édition
-  const handleEdit = (service: any) => {
+  const handleEdit = (service: Service) => {
     setFormData({
       service_type: service.service_type,
       title: service.title,

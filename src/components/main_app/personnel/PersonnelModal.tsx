@@ -2,6 +2,7 @@ import React from "react";
 import { Dialog } from "@headlessui/react";
 import { X } from "lucide-react";
 import { UseRetrieve } from "../../../hooks/useUser";
+import { getSafeImageSrc } from "../../../utils/imageUtils";
 
 interface PersonnelModalProps {
   personnelId: string | number | null;
@@ -86,9 +87,14 @@ const PersonnelModal: React.FC<PersonnelModalProps> = ({ personnelId, open, onCl
                 <div className="w-48 h-48 rounded-xl overflow-hidden border-2 border-indigo-400 flex items-center justify-center bg-gray-100">
                   {user.profile?.historique ? (
                     <img
-                      src={user.profile.historique}
+                      src={getSafeImageSrc(user.profile.historique, '')}
                       alt={user.first_name}
                       className="object-cover w-full h-full"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '';
+                        target.alt = 'Image non disponible';
+                      }}
                     />
                   ) : (
                     <span className="text-indigo-600 font-bold text-4xl">

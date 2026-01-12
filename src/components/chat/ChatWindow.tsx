@@ -22,7 +22,7 @@ const ChatWindow: React.FC<Props> = ({ conversation, onBack, isMobile }) => {
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; messageId: number | null }>({ open: false, messageId: null });
 
   // Fonction de suppression
-  const handleDelete = async (messageId: number) => {
+  const handleDelete = async (_messageId: number) => {
     // Appelle la mutation ou l'API pour supprimer le message
     // await deleteMessageMutation.mutateAsync(messageId);
     // Optionnel: refetch messages ou update local state
@@ -59,7 +59,7 @@ const ChatWindow: React.FC<Props> = ({ conversation, onBack, isMobile }) => {
   )
 
   // Récupère le nom complet d'un utilisateur
-  const getUserName = (u: any) =>
+  const getUserName = (u: { first_name?: string; last_name?: string; username?: string }) =>
     u?.first_name || u?.last_name ? `${u.first_name || ""} ${u.last_name || ""}`.trim() : u?.username || "Utilisateur"
 
   return (
@@ -117,7 +117,7 @@ const ChatWindow: React.FC<Props> = ({ conversation, onBack, isMobile }) => {
                         className="text-blue-600 underline text-sm hover:text-blue-800"
                         download
                       >
-                        {msg.filename || (typeof msg.file === 'string' ? msg.file.split('/').pop() : 'Fichier joint')}
+                        {(msg as any).filename || (typeof msg.file === 'string' ? msg.file.split('/').pop() : 'Fichier joint')}
                       </a>
                     </div>
                   )}

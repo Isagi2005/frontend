@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 
 import { useState } from "react"
@@ -18,6 +16,7 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Divider,
@@ -94,38 +93,42 @@ export default function DashboardContainer() {
       </Box>
       <Divider />
       <List>
-        <ListItem
-          button
-          onClick={() => {
-            setTabValue(0)
-            setDrawerOpen(false)
-          }}
-        >
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              setTabValue(0)
+              setDrawerOpen(false)
+            }}
+          >
           <ListItemIcon>
             <SchoolIcon className={tabValue === 0 ? "text-primary" : ""} />
           </ListItemIcon>
           <ListItemText primary="Résultats Pédagogiques" className={tabValue === 0 ? "text-primary font-medium" : ""} />
+          </ListItemButton>
         </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            setTabValue(1)
-            setDrawerOpen(false)
-          }}
-        >
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              setTabValue(1)
+              setDrawerOpen(false)
+            }}
+          >
           <ListItemIcon>
             <PaymentIcon className={tabValue === 1 ? "text-primary" : ""} />
           </ListItemIcon>
           <ListItemText primary="Statut des Paiements" className={tabValue === 1 ? "text-primary font-medium" : ""} />
+          </ListItemButton>
         </ListItem>
       </List>
       <Divider />
       <List>
-        <ListItem button>
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-          <ListItemText primary="Mon Profil" />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mon Profil" />
+          </ListItemButton>
         </ListItem>
       </List>
     </Box>

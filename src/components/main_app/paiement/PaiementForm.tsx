@@ -29,7 +29,7 @@ const ALL_MONTHS = [
 ]
 
 const PaiementForm: React.FC<PaiementFormProps> = ({ etudiantId, etudiantNom, etudiantPrenom, onClose }) => {
-  const { mutate: createPaiement, isLoading } = useAddPaiement()
+  const { mutate: createPaiement, isPending } = useAddPaiement()
 
   const [selectedMonths, setSelectedMonths] = useState<string[]>([])
   const [formData, setFormData] = useState({
@@ -40,7 +40,6 @@ const PaiementForm: React.FC<PaiementFormProps> = ({ etudiantId, etudiantNom, et
     datePaiement: new Date().toISOString().slice(0, 10),
   })
 
-  const [formSubmitted, setFormSubmitted] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
 
@@ -58,7 +57,6 @@ const PaiementForm: React.FC<PaiementFormProps> = ({ etudiantId, etudiantNom, et
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setFormSubmitted(true)
     setFormError(null)
 
     if (selectedMonths.length === 0) {
@@ -252,10 +250,10 @@ const PaiementForm: React.FC<PaiementFormProps> = ({ etudiantId, etudiantNom, et
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isPending}
                   className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg shadow-md transition-all"
                 >
-                  {isLoading ? "Enregistrement..." : "Confirmer le paiement"}
+                  {isPending ? "Enregistrement..." : "Confirmer le paiement"}
                 </button>
               </div>
             </form>

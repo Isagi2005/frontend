@@ -7,19 +7,31 @@ interface LoginData {
   role: string;
 }
 
+interface AuthResponse {
+  authenticated: boolean;
+  user?: {
+    id: number;
+    username: string;
+    role: string;
+    // Ajoutez d'autres propriétés utilisateur si nécessaire
+  };
+  token?: string;
+  error?: string;
+}
+
 export const useLogin = () => {
-  return useMutation({
+  return useMutation<AuthResponse, Error, LoginData>({
     mutationFn: async (data: LoginData) => {
-      const res = await api.post(`/api/user/login/`, data);
+      const res = await api.post<AuthResponse>(`/api/user/login/`, data);
       return res.data;
     },
   });
 };
 
-export const Is_authenticated = async () => {
+export const Is_authenticated = async (): Promise<boolean> => {
   try {
-    const res = await api.post(`/api/user/authenticated/`);
-    return res.data.authenticated;
+    const res = await api.post<AuthResponse>(`/api/user/authenticated/`);
+    return res.data.authenticated || false;
   } catch {
     return false;
   }

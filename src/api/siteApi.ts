@@ -29,7 +29,7 @@ export interface Footertype {
 }
 
 export interface DemandeType {
-  id: string;
+  id: number;
   nomEleve: string;
   statut: "L" | "NL";
   prenomEleve: string;
@@ -70,28 +70,28 @@ const preparePresentationData = (data: PresentationType): FormData => {
 const contenuApi = {
   getPresentation: async (): Promise<PresentationType[]> => {
     const { data } = await api.get("api/presentation/");
-    return data;
+    return data as PresentationType[];
   },
   getAccueilData: async (): Promise<accueilType[]> => {
     const { data } = await api.get("api/accueil/");
-    return data;
+    return data as accueilType[];
   },
   getFooterData: async (): Promise<Footertype[]> => {
     const { data } = await api.get("api/footer/");
-    return data;
+    return data as Footertype[];
   },
   getInscriptionData: async (): Promise<DemandeType[]> => {
     const { data } = await api.get("api/demande/");
-    return data;
+    return data as DemandeType[];
   },
 
-  retrieve: async (id: string, endpoints: string) => {
+  retrieve: async (id: string, endpoints: string): Promise<unknown> => {
     const { data } = await api.get(`api/${endpoints}/${id}/`);
     return data;
   },
   addInscription: async (demande: DemandeType): Promise<DemandeType> => {
     const { data } = await api.post("api/demande/", demande);
-    return data;
+    return data as DemandeType;
   },
   addPresentation: async (
     dataPres: PresentationType
@@ -102,7 +102,7 @@ const contenuApi = {
         "Content-Type": "multipart/form-data",
       },
     });
-    return data;
+    return data as PresentationType;
   },
   updatePresentation: async (
     dataPres: PresentationType
@@ -117,7 +117,7 @@ const contenuApi = {
         },
       }
     );
-    return data;
+    return data as PresentationType;
   },
   updateAccueil: async (dataAccueil: accueilType): Promise<accueilType> => {
     const formData = prepareAccueilData(dataAccueil);
@@ -130,13 +130,13 @@ const contenuApi = {
         },
       }
     );
-    return data;
+    return data as accueilType;
   },
   updateFooter: async (footer: Footertype): Promise<Footertype> => {
     const { data } = await api.patch(`/api/footer/${footer.id}/`, footer);
-    return data;
+    return data as Footertype;
   },
-  updateStatut: async (donnee) => {
+  updateStatut: async (donnee: { id: number; statut: string }) => {
     const { data } = await api.patch(`/api/demande/${donnee.id}/`, {
       statut: donnee.statut,
     });

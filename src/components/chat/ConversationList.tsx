@@ -8,12 +8,11 @@ import { GetUser } from "../../hooks/useUser"
 import GroupActionsMenu from "./GroupActionMenu"
 
 import type { ParentEnfantPedagogique } from "../../types/parentTypes" // à adapter selon ton projet
-import type { User } from "../../api/userApi"
 
 type Props = {
   onSelectConversation: (conv: ConversationDetail) => void
   selectedConversationId?: number
-  mode?: 'parent'
+  mode?: 'parent' | 'enseignant' | 'direction'
   enfants?: ParentEnfantPedagogique[]
   user?: User
 }
@@ -35,11 +34,11 @@ const ConversationList: React.FC<Props> = ({ onSelectConversation, selectedConve
       if (conv.type === 'private') {
         // Trouver l'autre utilisateur
         const other = conv.members?.find((m: User) => m && m.id !== user.id);
-        return other && allowedRoles.includes(other.role);
+        return other && allowedRoles.includes((other.profile?.role as string) || '');
       } else if (conv.type === 'group') {
         // Groupe dont l'utilisateur est membre ET qui ne contient que des rôles autorisés
         return conv.members?.some((m: User) => m && m.id === user.id) &&
-          conv.members?.every((m: User) => allowedRoles.includes(m.role));
+          conv.members?.every((m: User) => allowedRoles.includes((m.profile?.role as string) || ''));
       }
       return false;
     });
@@ -48,8 +47,8 @@ const ConversationList: React.FC<Props> = ({ onSelectConversation, selectedConve
   else if (mode === 'parent' && enfants && user) {
     // Récupérer les titulaires de chaque enfant
     const titulairesIds = Array.from(new Set(
-      enfants.flatMap((enfant: any) =>
-        enfant.titulaires ? enfant.titulaires.map((t: any) => t.id) : []
+      enfants.flatMap((enfant: ParentEnfantPedagogique) =>
+        (enfant as any).titulaires ? (enfant as any).titulaires.map((t: { id: number }) => t.id) : []
       )
     ));
     filteredConversations = filteredConversations.filter((conv) => {

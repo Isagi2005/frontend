@@ -2,12 +2,20 @@ import React from 'react';
 import { Card, CardContent, Typography, Box, Stack, Chip, Divider } from '@mui/material';
 import { useAlertesDifficulte } from '../../../../hooks/useStatistiques';
 
+interface Alerte {
+  eleve: string;
+  raison: 'moyenne_basse' | 'absences_repetees';
+}
+
 export const AlertesDifficulte: React.FC = () => {
   const { data, isLoading, isError } = useAlertesDifficulte();
 
+  // Type assertion pour le data retourné par le hook
+  const alertesData = data as { alertes: Alerte[] } | undefined;
+
   if (isLoading) return <Typography>Chargement des alertes...</Typography>;
   if (isError) return <Typography color="error">Erreur lors du chargement des alertes</Typography>;
-  if (!data || !data.alertes?.length) return <Typography>Aucune alerte détectée 🎉</Typography>;
+  if (!alertesData || !alertesData.alertes?.length) return <Typography>Aucune alerte détectée 🎉</Typography>;
 
   return (
     <Box sx={{ maxWidth: 600, mx: 'auto', mt: 4 }}>
@@ -18,7 +26,7 @@ export const AlertesDifficulte: React.FC = () => {
           </Typography>
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={2}>
-            {data.alertes.map((alerte: any, idx: number) => (
+            {alertesData.alertes.map((alerte: Alerte, idx: number) => (
               <Box key={idx} display="flex" alignItems="center" justifyContent="space-between" p={1} bgcolor="#f8f9fa" borderRadius={2}>
                 <Typography variant="body1">{alerte.eleve}</Typography>
                 <Chip

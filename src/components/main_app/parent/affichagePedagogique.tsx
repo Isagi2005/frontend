@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react"
 import {
   Select, MenuItem, FormControl, InputLabel, Card, CardContent,
   Typography, Divider, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Box, Grid, Skeleton
+  TableHead, TableRow, Paper, Box, Skeleton
 } from "@mui/material"
 import { 
   School as SchoolIcon, 
@@ -35,23 +34,23 @@ export default function ResultatsPedagogiques() {
     return (
       <Box className="p-6 max-w-4xl mx-auto">
         <Typography variant="h5" className="mb-6 text-gray-800">Résultats Pédagogiques</Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <Box display="flex" flexWrap="wrap" gap={3}>
+          <Box flex="1 0 250px" maxWidth="sm">
             <Skeleton variant="rectangular" height={60} className="mb-4" />
-          </Grid>
-          <Grid item xs={12} md={6}>
+          </Box>
+          <Box flex="1 0 250px" maxWidth="sm">
             <Skeleton variant="rectangular" height={60} className="mb-4" />
-          </Grid>
-          <Grid item xs={12} md={6}>
+          </Box>
+          <Box flex="1 0 250px" maxWidth="sm">
             <Skeleton variant="rectangular" height={200} />
-          </Grid>
-          <Grid item xs={12} md={6}>
+          </Box>
+          <Box flex="1 0 250px" maxWidth="sm">
             <Skeleton variant="rectangular" height={200} />
-          </Grid>
-          <Grid item xs={12}>
+          </Box>
+          <Box flex="1 1 100%">
             <Skeleton variant="rectangular" height={300} />
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
     )
   }
@@ -105,8 +104,8 @@ export default function ResultatsPedagogiques() {
         Résultats Pédagogiques
       </Typography>
 
-      <Grid container spacing={3} className="mb-6">
-        <Grid item xs={12} md={6}>
+      <Box display="flex" flexWrap="wrap" gap={3} className="mb-6">
+        <Box flex="1 0 250px" maxWidth="sm">
           <FormControl fullWidth variant="outlined">
             <InputLabel id="enfant-select-label">Enfant</InputLabel>
             <Select
@@ -124,9 +123,9 @@ export default function ResultatsPedagogiques() {
               ))}
             </Select>
           </FormControl>
-        </Grid>
+        </Box>
 
-        <Grid item xs={12} md={6}>
+        <Box flex="1 0 250px" maxWidth="sm">
           <FormControl fullWidth variant="outlined">
             <InputLabel id="trimestre-select-label">Trimestre</InputLabel>
             <Select
@@ -144,13 +143,13 @@ export default function ResultatsPedagogiques() {
               ))}
             </Select>
           </FormControl>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       {enfant && trimestre && (
         <>
-          <Grid container spacing={3} className="mb-6">
-            <Grid item xs={12} md={6}>
+          <Box display="flex" flexWrap="wrap" gap={3} className="mb-6">
+            <Box flex="1 0 250px" maxWidth="sm">
               <Card className="shadow-md h-full bg-white border-t-4 border-t-blue-500">
                 <CardContent>
                   <Typography variant="h6" className="font-bold mb-4 flex items-center gap-2">
@@ -173,9 +172,8 @@ export default function ResultatsPedagogiques() {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
+            </Box>
+            <Box flex="1 0 250px" maxWidth="sm">
               <Card className="shadow-md h-full bg-white border-t-4 border-t-amber-500">
                 <CardContent>
                   <Typography variant="h6" className="font-bold mb-4 flex items-center gap-2">
@@ -225,10 +223,10 @@ export default function ResultatsPedagogiques() {
                   </Box>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
-          {(trimestre.bulletin?.evaluations || trimestre.bulletin?.notes) && (
+          {(((trimestre.bulletin as any)?.evaluations) || (trimestre.bulletin as any)?.notes) && (
             <Card className="shadow-md mt-8 bg-white border-t-4 border-t-green-500">
               <CardContent>
                 <Typography variant="h6" className="font-bold mb-4 flex items-center gap-2">
@@ -245,7 +243,7 @@ export default function ResultatsPedagogiques() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {(trimestre.bulletin.evaluations || trimestre.bulletin.notes || []).map((note: any, idx: number) => (
+                      {(((trimestre.bulletin as any).evaluations || (trimestre.bulletin as any).notes) || []).map((note: any, idx: number) => (
                         <TableRow key={idx} className={idx % 2 === 0 ? "bg-gray-50" : ""}>
                           <TableCell className="font-medium">{note.matiere || note.domaine || "-"}</TableCell>
                           <TableCell>

@@ -1,4 +1,10 @@
-const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  setCurrentPage: (page: number) => void;
+}
+
+const Pagination = ({ currentPage, totalPages, setCurrentPage }: PaginationProps) => {
   if (totalPages <= 1) return null; // Pas de pagination si une seule page
 
   return (
@@ -9,7 +15,7 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
             ? "bg-gray-300 cursor-not-allowed"
             : "bg-blue-600 text-white hover:bg-blue-700"
         }`}
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
       >
         Précédent
@@ -25,7 +31,7 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
             ? "bg-gray-300 cursor-not-allowed"
             : "bg-blue-600 text-white hover:bg-blue-700"
         }`}
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
       >
         Suivant

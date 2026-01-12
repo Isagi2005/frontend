@@ -2,11 +2,28 @@ import React, { useState } from "react";
 import api from "../../../api/api";
 import { SheetPreview } from "../../../api/studentApi";
 
+interface PreviewResponse {
+  preview: SheetPreview[];
+}
+
 const PreviewUpload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewData, setPreviewData] = useState<SheetPreview[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const isPreviewResponse = (data: unknown): data is PreviewResponse => {
+    return typeof data === 'object' && data !== null && 'preview' in data;
+  };
+
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof Error) return error.message;
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { data?: { error?: string } } }).response;
+      return response?.data?.error || "Erreur lors de l'upload.";
+    }
+    return "Erreur lors de l'upload.";
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -39,15 +56,13 @@ const PreviewUpload: React.FC = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (!response.data || !response.data.preview) {
+      if (!response.data || !isPreviewResponse(response.data)) {
         throw new Error("Réponse invalide du serveur");
       }
 
       setPreviewData(response.data.preview);
-    } catch (error: any) {
-      setErrorMessage(
-        error.response?.data?.error || "Erreur lors de l'upload."
-      );
+    } catch (error: unknown) {
+      setErrorMessage(getErrorMessage(error));
       console.error("Erreur de l'upload :", error);
     }
     setLoading(false);

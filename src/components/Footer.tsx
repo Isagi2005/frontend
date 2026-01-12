@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Contact */}
-          {isLoading || isError || listData?.length <=0  ? (
+          {isLoading || isError || (listData && listData.length <= 0)  ? (
             <div className="text-center md:text-left bg-white py-4 px-6 rounded-lg shadow-md">
               <h3 className="text-lg font-semibold text-red-600 mb-4">
                 CONTACTEZ-NOUS

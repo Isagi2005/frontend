@@ -1,11 +1,9 @@
-"use client"
-
 import type React from "react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import type { User, UserRole } from "../../../api/userApi"
+import type { User, UserRole, UserProfile } from "../../../api/userApi"
 
 // Type pour le formulaire qui correspond au schéma Yup
 // Type pour le formulaire qui correspond au schéma Yup
@@ -30,7 +28,7 @@ type UserFormData = {
     role: UserRole;
   };
 };
-import { GetUser, UseRetrieve, useUpdateUser } from "../../../hooks/useUser"
+import { GetUser, UseRetrieve, useUpdateUser, UseUpdateProfile } from "../../../hooks/useUser"
 import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import Loading from "../../Loading"
@@ -63,6 +61,7 @@ const UserForm = () => {
   const navigate = useNavigate()
 
   const updateMutation = useUpdateUser()
+  const updateProfileMutation = UseUpdateProfile()
   const { id } = useParams<{ id: string }>()
   const { data: user, isLoading: load } = UseRetrieve(id || '')
   const { data: authentified } = GetUser()
@@ -105,30 +104,63 @@ const UserForm = () => {
     }
   }
 
-  const onSubmitHandler = (data: UserFormData) => {
-    // Créer un nouvel objet utilisateur avec les données du formulaire
-    const userData = {
-      ...data,
-      profile: {
-        ...data.profile,
-        // S'assure que l'image est du bon type avant de l'envoyer
+  const onSubmitHandler = async (data: UserFormData) => {
+    console.log("Données du formulaire soumises:", data);
+    
+    try {
+      // Séparer les données utilisateur et profil
+      const userData = {
+        id: data.id,
+        username: data.username,
+        password: data.password,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        dateArrivee: data.dateArrivee,
+        is_active: data.is_active,
+        status: data.status,
+        profile: {
+          id: data.profile.id,
+          role: data.profile.role,
+          image: data.profile.image instanceof File || 
+                typeof data.profile.image === 'string' ? 
+                data.profile.image : 
+                null
+        }
+      } as unknown as User;
+
+      const profileData: UserProfile = {
+        id: data.profile.id,
+        account: user?.id?.toString(),
+        sexe: data.profile.sexe,
+        telephone: data.profile.telephone,
+        birthDate: data.profile.birthDate,
+        adresse: data.profile.adresse,
+        religion: data.profile.religion,
+        role: data.profile.role,
         image: data.profile.image instanceof File || 
               typeof data.profile.image === 'string' ? 
               data.profile.image : 
               null
-      }
-    } as unknown as User; // Double assertion de type pour éviter les erreurs de compatibilité
-    
-    // Mettre à jour le profil utilisateur
-    updateMutation.mutate(userData, {
-      onSuccess: () => {
-        toast.success("Modification réussie !")
-        navigate("/home/personnel/user")
-      },
-      onError: () => {
-        toast.error("Erreur lors de la modification !")
-      },
-    });
+      };
+
+      console.log("UserData à mettre à jour:", userData);
+      console.log("ProfileData à mettre à jour:", profileData);
+
+      // Mettre à jour l'utilisateur principal
+      await updateMutation.mutateAsync(userData);
+      console.log("Utilisateur mis à jour");
+
+      // Mettre à jour le profil
+      await updateProfileMutation.mutateAsync(profileData);
+      console.log("Profil mis à jour");
+
+      toast.success("Modification réussie !");
+      navigate("/home/personnel/user");
+    } catch (error) {
+      console.error("Erreur lors de la modification:", error);
+      toast.error("Erreur lors de la modification !");
+    }
   };
 
   if (load) {

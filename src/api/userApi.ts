@@ -44,6 +44,8 @@ const prepareFormData = (data: User): FormData => {
     formData.append("is_active", data.is_active.toString());
   }
   formData.append("email", data.email);
+  formData.append("dateArrivee", data.dateArrivee);
+  formData.append("status", data.status);
   formData.append("profile", JSON.stringify(data.profile));
 
   return formData;

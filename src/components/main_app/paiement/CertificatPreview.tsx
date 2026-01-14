@@ -1,9 +1,15 @@
 import React from "react";
+import DOMPurify from "dompurify";
 import { exportCertificatDocx } from "../../../api/certificatApi";
 
 interface CertificatPreviewProps {
   content: string;
-  etudiant: any;
+  etudiant: {
+    id: number;
+    nom: string;
+    prenom: string;
+    [key: string]: unknown;
+  };
   onClose: () => void;
 }
 
@@ -102,13 +108,18 @@ const CertificatPreview: React.FC<CertificatPreviewProps> = ({
               <h3 className="font-bold">RAITRA KIDZ</h3>
               <p className="text-sm">By Pass Alasora</p>
             </div>
-            <div className="text-center flex-grow">
+            <div className="text-center">
               <h2 className="text-lg font-semibold">CERTIFICAT DE SCOLARITÉ</h2>
             </div>
           </div>
           
           {/* Contenu du certificat */}
-          <div className="text-justify mt-4" dangerouslySetInnerHTML={{ __html: content }} />
+          <div 
+            className="text-justify mt-4" 
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(content) 
+            }} 
+          />
           
           {/* Signature */}
           <div className="mt-8 text-right">

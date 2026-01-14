@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -10,10 +8,10 @@ import { toast } from "react-toastify"
 import { useAddProfile, useAddUser } from "../../../hooks/useUser"
 import BackButton from "../../Button"
 import { UserIcon, Mail, Phone, Calendar, MapPin, Book, Lock, Upload, Save, UserPlus } from "lucide-react"
+import ValidationService from "../../../services/validationService"
 
 // Définition du schéma de validation
 const userSchema = yup.object().shape({
-  username: yup.string().required("Le nom d'utilisateur est requis"),
   email: yup.string().email("Email invalide").required("L'email est requis"),
   password: yup.string().min(6, "Le mot de passe doit contenir au moins 6 caractères").required("Le mot de passe est requis"),
   first_name: yup.string(),
@@ -73,43 +71,80 @@ const CreateUser = () => {
   }
 
   const onSubmitHandler = async (data: UserFormData) => {
+    console.log("Données du formulaire soumises:", data);
+    
     try {
+      // Validation supplémentaire côté client
+      if (!ValidationService.validateEmail(data.email)) {
+        toast.error("Format d'email invalide");
+        return;
+      }
+
+      if (data.profile.telephone && !ValidationService.validatePhone(data.profile.telephone)) {
+        toast.error("Format de numéro de téléphone invalide");
+        return;
+      }
+
+      if (data.profile.adresse && !ValidationService.validateAddress(data.profile.adresse)) {
+        toast.error("L'adresse doit contenir entre 5 et 200 caractères");
+        return;
+      }
+
+      // Nettoyer les entrées
+      const sanitizedData = {
+        ...data,
+        email: ValidationService.sanitizeString(data.email),
+        first_name: ValidationService.sanitizeString(data.first_name || ""),
+        last_name: ValidationService.sanitizeString(data.last_name || ""),
+        profile: {
+          ...data.profile,
+          telephone: data.profile.telephone ? ValidationService.sanitizeString(data.profile.telephone) : undefined,
+          adresse: data.profile.adresse ? ValidationService.sanitizeString(data.profile.adresse) : undefined,
+          religion: data.profile.religion ? ValidationService.sanitizeString(data.profile.religion) : undefined,
+        }
+      };
+
       // Création de l'utilisateur avec les champs requis
       const userData: User = {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        first_name: data.first_name || "",
-        last_name: data.last_name || "",
+        username: "temp", // Username automatique comme spécifié dans le modèle
+        email: sanitizedData.email,
+        password: sanitizedData.password,
+        first_name: sanitizedData.first_name,
+        last_name: sanitizedData.last_name,
         is_active: true,
         status: "active",
         dateArrivee: new Date().toISOString(),
         // On envoie un profil minimal pour satisfaire le type User côté API
         profile: {
-          ...(data.profile || {}),
-          image: data.profile?.image ?? null,
+          ...(sanitizedData.profile || {}),
+          image: sanitizedData.profile?.image ?? null,
         } as UserProfile,
       };
 
+      console.log("UserData à envoyer:", userData);
+
       // Appel des mutations
       const user = await addUser.mutateAsync(userData);
+      console.log("Utilisateur créé:", user);
 
       // Création du profil utilisateur lié si nécessaire
-      if (data.profile) {
+      if (sanitizedData.profile) {
         const profileData: UserProfile = {
-          ...data.profile,
-          image: data.profile.image ?? null,
+          ...sanitizedData.profile,
+          image: sanitizedData.profile.image ?? null,
           account: String(user.id),
         };
 
+        console.log("ProfileData à envoyer:", profileData);
         await addProfile.mutateAsync(profileData);
+        console.log("Profil créé");
       }
 
       toast.success("Utilisateur créé avec succès");
       reset();
     } catch (error) {
       console.error("Erreur lors de la création de l'utilisateur:", error);
-      toast.error("Une erreur est survenue lors de la création de l'utilisateur");
+      toast.error(`Une erreur est survenue: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
     }
   };
 
@@ -120,7 +155,7 @@ const CreateUser = () => {
           <UserPlus className="mr-2 h-6 w-6 text-blue-600" />
           Créer un nouvel utilisateur
         </h2>
-        <BackButton to="/home/personnel" />
+        <BackButton to="/home/personnel/user" />
       </div>
 
       <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-8">

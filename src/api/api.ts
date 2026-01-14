@@ -1,5 +1,6 @@
 import axios from "axios";
 import { refreshToken } from "./Refresh";
+import { tokenService } from "../services/tokenService";
 import type { ApiError } from "../types/api.types";
 
 interface CustomRequestConfig {
@@ -33,7 +34,7 @@ const onRefreshed = (token: string): void => {
 // Intercepteur de requête pour ajouter le token d'authentification
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    const token = tokenService.getAccessToken();
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
@@ -76,7 +77,10 @@ api.interceptors.response.use(
       try {
         const newAccessToken = await refreshToken();
         if (newAccessToken) {
-          localStorage.setItem("access_token", newAccessToken);
+          const refreshTokenValue = tokenService.getRefreshToken();
+          if (refreshTokenValue) {
+            tokenService.setTokens(newAccessToken, refreshTokenValue);
+          }
           onRefreshed(newAccessToken);
           
           originalRequest.headers = originalRequest.headers || {};
@@ -94,7 +98,7 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         // En cas d'erreur de rafraîchissement, déconnecter l'utilisateur
-        localStorage.removeItem("access_token");
+        tokenService.removeTokens();
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {

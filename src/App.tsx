@@ -2,15 +2,16 @@ import { RouterProvider } from "react-router-dom";
 import AppRoute from "./routes/route";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "sonner";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const App: React.FC = () => {
   const router = AppRoute();
   return (
-    <>
+    <ErrorBoundary>
       <ToastContainer position="bottom-right" autoClose={3000} />
       <RouterProvider router={router} />
       <Toaster />
-    </>
+    </ErrorBoundary>
   );
 };
 

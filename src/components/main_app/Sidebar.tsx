@@ -5,7 +5,7 @@ import {
   financeItem,
   parentItem,
 } from "../../dataMenu/sidebarItem";
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 interface SidebarProps {
@@ -16,12 +16,11 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const nav = useNavigate();
   const [openSubMenu, setOpenSubMenu] = useState<number | null>(null);
-
   const role = localStorage.getItem("role") || '';
   
   type RoleType = 'direction' | 'finance' | 'enseignant' | 'parent';
   
-  const selectRole = (roleChoice: string) => {
+  const selectRole = useCallback((roleChoice: string) => {
     const validRole = ['direction', 'finance', 'enseignant', 'parent'].includes(roleChoice) 
       ? roleChoice as RoleType 
       : null;
@@ -36,12 +35,12 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     };
     
     return roleMap[validRole] || null;
-  };
+  }, []);
   
   const dataItem = selectRole(role) || [];
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setIsOpen(!isOpen);
-  };
+  }, [isOpen, setIsOpen]);
   return (
     <div
       className={`h-screen fixed top-0 left-0 ${
@@ -137,4 +136,4 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

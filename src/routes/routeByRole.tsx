@@ -3,7 +3,6 @@ import ListClasse from "../components/main_app/classe/ListClasse";
 import ListAutre from "../components/main_app/contenu/ListAutre";
 import ListEvent from "../components/main_app/contenu/ListEvent";
 import DashboardEcolage from "../components/main_app/dashboard/DashboardEcolage";
-// import EmployePage from "../components/main_app/employe/AjoutEmploye";
 import BulletinContainer from "../components/main_app/enseignant/bulletin/BulletinContainer";
 import PeriodeManagement from "../components/main_app/enseignant/bulletin/PeriodeManagement";
 import TransitionPresence from "../components/main_app/enseignant/presence/TransitionPresence";
@@ -24,6 +23,7 @@ import ServiceManager from "../components/main_app/ServiceManager";
 import ListEtudiantPage from "../pages/enseignant/listEtudiantPage";
 import Demandes from "../pages/inscription/SectionInscription";
 import StatistiquesClassePage from '../pages/StatistiquesClasse';
+import EmployePage from "../components/main_app/employe/AjoutEmploye";
 
 export const routesByRole = {
   direction: [
@@ -41,7 +41,7 @@ export const routesByRole = {
     { path: "rapport/financier", element: <RapportFinancierList/>, label: "Rapports financiers", keywords: ["rapport financier", "financier", "finance", "bilan"] },
     { path: "conges", element: <CongesManagement/>, label: "Gestion des congés", keywords: ["congés", "absences", "gestion congé", "vacances"] },
     { path: "com", element: <ChatContainer />, label: "Messagerie", keywords: ["messagerie", "message", "chat", "communication"] },
-    // { path: "gestion/employe", element: <EmployePage />, label: "Gestion des employés", keywords: ["employé", "employés", "gestion employé", "personnel"] },
+    { path: "gestion/employe", element: <EmployePage />, label: "Gestion des employés", keywords: ["employé", "employés", "gestion employé", "personnel"] },
     { path: "rapport/pedagogique", element: <RapportPedagogiqueDirectionBoard/>, label: "Rapports pédagogiques", keywords: ["rapport pédagogique", "pédagogie", "rapports", "journalier", "suivi"] },
     { path: "etudiant", element: <ListEtudiantPage/>, label: "gestion etudiant", keywords: ["etudiant", "eleve", "student", "journal"] },
     { path: "bulletinDir", element: <BulletinContainer/>, label: "gestion bulletin", keywords: ["bulletin", "note"] }
